@@ -2,111 +2,126 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Game Zone</title>
+  <title>Snake Game</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="games-page">
+<body>
 
-<header>
-  <h1>🎮 Game Zone</h1>
-</header>
+<h1>🐍 Snake Game</h1>
 
-<section>
-  <h2>🐍 Snake Game</h2>
-  <canvas id="gameCanvas" width="400" height="400"></canvas>
-  <p>Use Arrow Keys to Play</p>
-</section>
+<canvas id="gameCanvas"></canvas>
 
-<script src="script.js">// TYPING EFFECT
-const text = "Enter The Ultimate Gaming Experience...";
-let i = 0;
+<!-- Mobile Controls -->
+<div class="controls">
+  <button onclick="setDirection('up')">⬆️</button><br>
+  <button onclick="setDirection('left')">⬅️</button>
+  <button onclick="setDirection('down')">⬇️</button>
+  <button onclick="setDirection('right')">➡️</button>
+</div>
+  <style>body {
+  text-align: center;
+  background: black;
+  color: white;
+  font-family: Arial;
+}
 
-function typeEffect() {
-  if (i < text.length) {
-    document.getElementById("typing").innerHTML += text.charAt(i);
-    i++;
-    setTimeout(typeEffect, 50);
+canvas {
+  background: black;
+  border: 2px solid cyan;
+  width: 90vw;      /* responsive */
+  max-width: 400px; /* laptop */
+  height: 90vw;
+  max-height: 400px;
+}
+
+/* Mobile buttons */
+.controls {
+  margin-top: 20px;
+}
+
+button {
+  padding: 10px 15px;
+  margin: 5px;
+  font-size: 20px;
+  background: cyan;
+  border: none;
+  border-radius: 5px;
+}
+    </style>
+
+<script> const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+// responsive canvas fix
+canvas.width = 400;
+canvas.height = 400;
+
+let box = 20;
+let snake = [{x: 200, y: 200}];
+let dx = box;
+let dy = 0;
+
+let food = {
+  x: Math.floor(Math.random() * 20) * box,
+  y: Math.floor(Math.random() * 20) * box
+};
+
+// PC controls
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowUp" && dy === 0) { dx = 0; dy = -box; }
+  if (e.key === "ArrowDown" && dy === 0) { dx = 0; dy = box; }
+  if (e.key === "ArrowLeft" && dx === 0) { dx = -box; dy = 0; }
+  if (e.key === "ArrowRight" && dx === 0) { dx = box; dy = 0; }
+});
+
+// Mobile controls
+function setDirection(dir) {
+  if (dir === "up" && dy === 0) { dx = 0; dy = -box; }
+  if (dir === "down" && dy === 0) { dx = 0; dy = box; }
+  if (dir === "left" && dx === 0) { dx = -box; dy = 0; }
+  if (dir === "right" && dx === 0) { dx = box; dy = 0; }
+}
+
+function drawGame() {
+  ctx.clearRect(0, 0, 400, 400);
+
+  let head = {x: snake[0].x + dx, y: snake[0].y + dy};
+
+  // Game Over
+  if (
+    head.x < 0 || head.y < 0 ||
+    head.x >= 400 || head.y >= 400 ||
+    snake.some(s => s.x === head.x && s.y === head.y)
+  ) {
+    alert("Game Over 😢");
+    snake = [{x: 200, y: 200}];
+    dx = box;
+    dy = 0;
+    return;
   }
-}
 
-if (document.getElementById("typing")) {
-  typeEffect();
-}
+  snake.unshift(head);
 
-// PAGE TRANSITION
-function enterSite() {
-  document.body.style.opacity = "0";
-  document.body.style.transition = "0.5s";
-  setTimeout(() => {
-    window.location.href = "games.html";
-  }, 500);
-}
-
-// SNAKE GAME
-const canvas = document.getElementById("gameCanvas");
-
-if (canvas) {
-  const ctx = canvas.getContext("2d");
-
-  let snake = [{x: 200, y: 200}];
-  let dx = 20;
-  let dy = 0;
-  let food = randomFood();
-
-  document.addEventListener("keydown", changeDirection);
-
-  function changeDirection(e) {
-    if (e.key === "ArrowUp" && dy === 0) { dx = 0; dy = -20; }
-    if (e.key === "ArrowDown" && dy === 0) { dx = 0; dy = 20; }
-    if (e.key === "ArrowLeft" && dx === 0) { dx = -20; dy = 0; }
-    if (e.key === "ArrowRight" && dx === 0) { dx = 20; dy = 0; }
-  }
-
-  function randomFood() {
-    return {
-      x: Math.floor(Math.random() * 20) * 20,
-      y: Math.floor(Math.random() * 20) * 20
+  if (head.x === food.x && head.y === food.y) {
+    food = {
+      x: Math.floor(Math.random() * 20) * box,
+      y: Math.floor(Math.random() * 20) * box
     };
+  } else {
+    snake.pop();
   }
 
-  function gameLoop() {
-    ctx.clearRect(0, 0, 400, 400);
+  // Snake
+  ctx.fillStyle = "lime";
+  snake.forEach(p => ctx.fillRect(p.x, p.y, box, box));
 
-    let head = {x: snake[0].x + dx, y: snake[0].y + dy};
-
-    // Game over condition
-    if (
-      head.x < 0 || head.y < 0 ||
-      head.x >= 400 || head.y >= 400 ||
-      snake.some(s => s.x === head.x && s.y === head.y)
-    ) {
-      alert("Game Over 😢");
-      snake = [{x: 200, y: 200}];
-      dx = 20;
-      dy = 0;
-      return;
-    }
-
-    snake.unshift(head);
-
-    if (head.x === food.x && head.y === food.y) {
-      food = randomFood();
-    } else {
-      snake.pop();
-    }
-
-    // Draw snake
-    ctx.fillStyle = "cyan";
-    snake.forEach(p => ctx.fillRect(p.x, p.y, 20, 20));
-
-    // Draw food
-    ctx.fillStyle = "red";
-    ctx.fillRect(food.x, food.y, 20, 20);
-  }
-
-  setInterval(gameLoop, 100);
+  // Food
+  ctx.fillStyle = "red";
+  ctx.fillRect(food.x, food.y, box, box);
 }
-  </script>
+
+setInterval(drawGame, 120);
+</script>
+
 </body>
 </html>
-
