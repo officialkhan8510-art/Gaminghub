@@ -13,7 +13,96 @@
   <p id="typing"></p>
   <button onclick="enterSite()">ENTER GAME</button>
 </div>
+  <style>body {
+  margin: 0;
+  font-family: Arial;
+  background: black;
+  color: white;
+}
 
+/* INTRO PAGE */
+.intro {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: radial-gradient(circle, #050505, #000);
+}
+
+.intro-box {
+  text-align: center;
+}
+
+/* GLITCH TEXT */
+.glitch {
+  font-size: 60px;
+  color: white;
+  position: relative;
+  text-shadow: 0 0 20px cyan;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+}
+
+.glitch::before {
+  color: red;
+  animation: glitch 0.3s infinite;
+}
+
+.glitch::after {
+  color: blue;
+  animation: glitch 0.3s infinite reverse;
+}
+
+@keyframes glitch {
+  0% { transform: translate(2px, -2px); }
+  50% { transform: translate(-2px, 2px); }
+  100% { transform: translate(2px, 2px); }
+}
+
+/* Typing text */
+#typing {
+  margin-top: 20px;
+  font-size: 20px;
+  color: cyan;
+}
+
+/* Button */
+button {
+  margin-top: 30px;
+  padding: 12px 30px;
+  background: linear-gradient(45deg, cyan, purple);
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.1);
+}
+
+/* GAME PAGE */
+.games-page header {
+  text-align: center;
+  padding: 20px;
+  border-bottom: 1px solid cyan;
+}
+
+section {
+  text-align: center;
+  padding: 40px;
+}
+
+canvas {
+  background: black;
+  border: 2px solid cyan;
+}
+    </style>
 <script src="script.js"></script>
 </body>
 </html>
