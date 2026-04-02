@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pro Chess</title>
+
+<link rel="stylesheet"
+href="https://unpkg.com/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
+
+<style>
+body {
+  background: #020617;
+  color: white;
+  text-align: center;
+  font-family: Arial;
+}
+
+#board {
+  width: 340px;
+  margin: 20px auto;
+}
+
+.status {
+  margin-top: 10px;
+  color: #38bdf8;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px;
+  background: #38bdf8;
+  border: none;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h2>♟ Pro Chess</h2>
+
+<div id="board"></div>
+
+<div class="status" id="status"></div>
+
+<button onclick="resetGame()">Reset Game</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+<script src="https://unpkg.com/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
+
+<script>
+const game = new Chess();
+let board = null;
+
+function updateStatus() {
+  let status = '';
+  let moveColor = game.turn() === 'w' ? 'White' : 'Black';
+
+  if (game.in_checkmate()) {
+    status = 'Game over, ' + moveColor + ' is in checkmate.';
+  } else if (game.in_draw()) {
+    status = 'Game over, draw.';
+  } else {
+    status = moveColor + ' to move';
+    if (game.in_check()) {
+      status += ' (Check)';
+    }
+  }
+
+  document.getElementById('status').innerHTML = status;
+}
+
+function onDrop(source, target) {
+  const move = game.move({
+    from: source,
+    to: target,
+    promotion: 'q'
+  });
+
+  if (move === null) return 'snapback';
+
+  updateStatus();
+}
+
+board = Chessboard('board', {
+  draggable: true,
+  position: 'start',
+  onDrop: onDrop
+});
+
+updateStatus();
+
+function resetGame() {
+  game.reset();
+  board.start();
+  updateStatus();
+}
+</script>
+
+</body>
+</html>
