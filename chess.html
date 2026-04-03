@@ -36,6 +36,13 @@ body{
 .selected{
   outline:3px solid yellow;
 }
+  .white-piece {
+  color: white;
+}
+
+.black-piece {
+  color: black;
+}
 </style>
 </head>
 
@@ -84,7 +91,15 @@ function renderBoard(){
       cell.classList.add("black");
     }
 
-    cell.textContent=p;
+    cell.textContent = p;
+
+if("♙♖♘♗♕♔".includes(p)){
+  cell.classList.add("white-piece");
+}
+
+if("♟♜♞♝♛♚".includes(p)){
+  cell.classList.add("black-piece");
+}
 
     cell.onclick=()=>{
       if(selected===null){
