@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Game Hub</title>
 
-<!-- FONT -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
 
 <style>
@@ -16,39 +15,32 @@
   font-family: 'Poppins', sans-serif;
 }
 
-/* VIDEO BACKGROUND */
-video {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -1;
-}
-
-/* OVERLAY */
-.overlay {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: rgba(2,6,23,0.7);
-}
-
-/* CONTENT */
-.container {
+body {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  text-align: center;
   color: white;
+
+  /* ANIMATED GRADIENT */
+  background: linear-gradient(-45deg, #020617, #0f172a, #1e293b, #020617);
+  background-size: 400% 400%;
+  animation: bg 8s infinite;
+}
+
+@keyframes bg {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.container {
+  text-align: center;
   animation: fade 1.5s ease;
 }
 
 h1 {
-  font-size: 50px;
+  font-size: 48px;
   color: #38bdf8;
   text-shadow: 0 0 20px #38bdf8;
 }
@@ -58,16 +50,16 @@ p {
   color: #94a3b8;
 }
 
-/* BUTTONS */
 .buttons {
   display: flex;
   gap: 20px;
+  justify-content: center;
 }
 
 button {
   padding: 12px 25px;
-  border: none;
   border-radius: 10px;
+  border: none;
   cursor: pointer;
   font-size: 16px;
   transition: 0.3s;
@@ -75,6 +67,7 @@ button {
 
 .play {
   background: #22c55e;
+  color: black;
 }
 
 .login {
@@ -85,9 +78,9 @@ button {
 
 button:hover {
   transform: scale(1.1);
+  box-shadow: 0 0 15px #38bdf8;
 }
 
-/* ANIMATION */
 @keyframes fade {
   from { opacity: 0; transform: translateY(40px); }
   to { opacity: 1; transform: translateY(0); }
@@ -96,13 +89,6 @@ button:hover {
 </head>
 
 <body>
-
-<!-- VIDEO -->
-<video autoplay muted loop>
-  <source src="https://cdn.coverr.co/videos/coverr-gaming-setup-5176/1080p.mp4" type="video/mp4">
-</video>
-
-<div class="overlay"></div>
 
 <div class="container">
   <h1>🎮 GAME HUB</h1>
