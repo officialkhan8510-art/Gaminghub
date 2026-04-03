@@ -7,7 +7,7 @@
 
 <!-- CSS -->
 <link rel="stylesheet"
-href="https://unpkg.com/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
+href="https://cdnjs.cloudflare.com/ajax/libs/chessboard.js/1.0.0/chessboard.min.css">
 
 <style>
 body {
@@ -16,7 +16,6 @@ body {
   text-align: center;
   font-family: Arial;
 }
-
 #board {
   width: 320px;
   margin: 30px auto;
@@ -32,21 +31,16 @@ body {
 
 <button onclick="resetGame()">Reset</button>
 
-<!-- JS LIBRARIES -->
+<!-- JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
 
-<script src="https://unpkg.com/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chessboard.js/1.0.0/chessboard.min.js"></script>
 
 <script>
 window.onload = function() {
-  if (typeof Chessboard === "undefined") {
-    alert("Chessboard library not loaded ❌");
-    return;
-  }
-
   var game = new Chess();
 
-  window.board = Chessboard('board', {
+  var board = Chessboard('board', {
     draggable: true,
     position: 'start',
     onDrop: function(source, target) {
@@ -59,6 +53,8 @@ window.onload = function() {
       if (move === null) return 'snapback';
     }
   });
+
+  window.board = board;
 };
 
 function resetGame() {
