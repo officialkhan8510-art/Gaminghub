@@ -42,11 +42,13 @@ body{
 <body>
 
 <h2>♟ Chess (Basic Working)</h2>
-
+  
+<h3 id="turn">Turn: white</h3>
+<button onclick="resetGame()">Reset</button>
 <div class="board" id="board"></div>
 
 <script>
-const pieces = [
+let pieces = [
   "♜","♞","♝","♛","♚","♝","♞","♜",
   "♟","♟","♟","♟","♟","♟","♟","♟",
   "","","","","","","","",
@@ -59,9 +61,19 @@ const pieces = [
 
 const board = document.getElementById("board");
 let selected = null;
+let turn = "white";
+
+function isWhite(piece){
+  return "♙♖♘♗♕♔".includes(piece);
+}
+
+function isBlack(piece){
+  return "♟♜♞♝♛♚".includes(piece);
+}
 
 function renderBoard(){
   board.innerHTML="";
+
   pieces.forEach((p,i)=>{
     const cell=document.createElement("div");
     cell.classList.add("cell");
@@ -76,11 +88,19 @@ function renderBoard(){
 
     cell.onclick=()=>{
       if(selected===null){
+        if(p==="") return;
+
+        if(turn==="white" && !isWhite(p)) return;
+        if(turn==="black" && !isBlack(p)) return;
+
         selected=i;
         cell.classList.add("selected");
       }else{
         pieces[i]=pieces[selected];
         pieces[selected]="";
+
+        turn = (turn==="white") ? "black" : "white";
+
         selected=null;
         renderBoard();
       }
@@ -88,6 +108,12 @@ function renderBoard(){
 
     board.appendChild(cell);
   });
+
+  document.getElementById("turn").innerText = "Turn: " + turn;
+}
+
+function resetGame(){
+  location.reload();
 }
 
 renderBoard();
