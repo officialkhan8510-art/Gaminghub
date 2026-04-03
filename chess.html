@@ -3,8 +3,10 @@
 <head>
 <title>Pro Chess</title>
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link rel="stylesheet"
-href="https://unpkg.com/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
+href="https://cdn.jsdelivr.net/npm/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
 
 <style>
 body {
@@ -15,17 +17,11 @@ body {
 }
 
 #board {
-  width: 340px;
-  margin: 20px auto;
-}
-
-.status {
-  margin-top: 10px;
-  color: #38bdf8;
+  width: 320px;
+  margin: 30px auto;
 }
 
 button {
-  margin-top: 10px;
   padding: 10px;
   background: #38bdf8;
   border: none;
@@ -40,59 +36,33 @@ button {
 
 <div id="board"></div>
 
-<div class="status" id="status"></div>
+<button onclick="resetGame()">Reset</button>
 
-<button onclick="resetGame()">Reset Game</button>
-
+<!-- LIBRARIES -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
-<script src="https://unpkg.com/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
 
 <script>
-const game = new Chess();
-let board = null;
+var game = new Chess();
 
-function updateStatus() {
-  let status = '';
-  let moveColor = game.turn() === 'w' ? 'White' : 'Black';
-
-  if (game.in_checkmate()) {
-    status = 'Game over, ' + moveColor + ' is in checkmate.';
-  } else if (game.in_draw()) {
-    status = 'Game over, draw.';
-  } else {
-    status = moveColor + ' to move';
-    if (game.in_check()) {
-      status += ' (Check)';
-    }
-  }
-
-  document.getElementById('status').innerHTML = status;
-}
-
-function onDrop(source, target) {
-  const move = game.move({
-    from: source,
-    to: target,
-    promotion: 'q'
-  });
-
-  if (move === null) return 'snapback';
-
-  updateStatus();
-}
-
-board = Chessboard('board', {
+var board = Chessboard('board', {
   draggable: true,
   position: 'start',
-  onDrop: onDrop
-});
+  onDrop: function(source, target) {
+    var move = game.move({
+      from: source,
+      to: target,
+      promotion: 'q'
+    });
 
-updateStatus();
+    if (move === null) return 'snapback';
+  }
+});
 
 function resetGame() {
   game.reset();
   board.start();
-  updateStatus();
 }
 </script>
 
