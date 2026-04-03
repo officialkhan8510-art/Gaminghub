@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Pro Chess</title>
+<title>Chess Game</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- Chessboard CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chessboard.js/1.0.0/chessboard.min.css">
 
 <style>
 body{
@@ -16,77 +13,84 @@ body{
   font-family:Arial;
 }
 
-h1{
-  margin:20px;
-  color:#38bdf8;
+.board{
+  display:grid;
+  grid-template-columns:repeat(8,50px);
+  justify-content:center;
+  margin-top:30px;
 }
 
-#board{
-  width:350px;
-  margin:auto;
-}
-
-button{
-  margin-top:15px;
-  padding:10px 20px;
-  background:#38bdf8;
-  border:none;
+.cell{
+  width:50px;
+  height:50px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:26px;
   cursor:pointer;
+}
+
+.white{ background:#eee; }
+.black{ background:#555; color:white; }
+
+.selected{
+  outline:3px solid yellow;
 }
 </style>
 </head>
 
 <body>
 
-<h1>♟️ Pro Chess</h1>
+<h2>♟ Chess (Basic Working)</h2>
 
-<div id="board"></div>
-
-<button onclick="resetGame()">Reset Game</button>
-
-<!-- LIBRARIES (IMPORTANT) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.13.4/chess.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/chessboard.js/1.0.0/chessboard.min.js"></script>
+<div class="board" id="board"></div>
 
 <script>
-var board = null
-var game = new Chess()
+const pieces = [
+  "♜","♞","♝","♛","♚","♝","♞","♜",
+  "♟","♟","♟","♟","♟","♟","♟","♟",
+  "","","","","","","","",
+  "","","","","","","","",
+  "","","","","","","","",
+  "","","","","","","","",
+  "♙","♙","♙","♙","♙","♙","♙","♙",
+  "♖","♘","♗","♕","♔","♗","♘","♖"
+];
 
-function onDragStart (source, piece) {
-  if (game.game_over()) return false
+const board = document.getElementById("board");
+let selected = null;
 
-  if ((game.turn() === 'w' && piece.search(/^b/) !== -1) ||
-      (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
-    return false
-  }
+function renderBoard(){
+  board.innerHTML="";
+  pieces.forEach((p,i)=>{
+    const cell=document.createElement("div");
+    cell.classList.add("cell");
+
+    if((Math.floor(i/8)+i%8)%2==0){
+      cell.classList.add("white");
+    }else{
+      cell.classList.add("black");
+    }
+
+    cell.textContent=p;
+
+    cell.onclick=()=>{
+      if(selected===null){
+        selected=i;
+        cell.classList.add("selected");
+      }else{
+        pieces[i]=pieces[selected];
+        pieces[selected]="";
+        selected=null;
+        renderBoard();
+      }
+    };
+
+    board.appendChild(cell);
+  });
 }
 
-function onDrop (source, target) {
-  var move = game.move({
-    from: source,
-    to: target,
-    promotion: 'q'
-  })
-
-  if (move === null) return 'snapback'
-}
-
-function onSnapEnd () {
-  board.position(game.fen())
-}
-
-function resetGame(){
-  game.reset()
-  board.start()
-}
-
-board = Chessboard('board', {
-  draggable: true,
-  position: 'start',
-  onDragStart: onDragStart,
-  onDrop: onDrop,
-  onSnapEnd: onSnapEnd
-})
+renderBoard();
 </script>
 
 </body>
