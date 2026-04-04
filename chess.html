@@ -63,7 +63,9 @@ body{
 <h3 id="turn">Turn: white</h3>
 <button onclick="resetGame()">Reset</button>
 <div class="board" id="board"></div>
-
+  
+let validMoves = [];
+  
 <script>
 let pieces = [
   "♜","♞","♝","♛","♚","♝","♞","♜",
@@ -113,26 +115,38 @@ if("♟♜♞♝♛♚".includes(p)){
 
    cell.onclick = () => {
 
+  // FIRST CLICK (select piece)
   if(selected === null){
+
     if(p === "") return;
 
     selected = i;
-
-    let moves = getMoves(i);
+    validMoves = getMoves(i);
 
     renderBoard();
 
-    moves.forEach(m => {
+    validMoves.forEach(m => {
       board.children[m].classList.add("highlight");
     });
 
-  } else {
-    pieces[i] = pieces[selected];
-    pieces[selected] = "";
+  }
+
+  // SECOND CLICK (move)
+  else {
+
+    // sirf allowed move pe hi chalega
+    if(validMoves.includes(i)){
+      pieces[i] = pieces[selected];
+      pieces[selected] = "";
+    }
+
     selected = null;
+    validMoves = [];
     renderBoard();
   }
-} board.appendChild(cell);
+
+};
+  board.appendChild(cell);
   });
 
   document.getElementById("turn").innerText = "Turn: " + turn;
