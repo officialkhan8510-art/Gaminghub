@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Chess Game</title>
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chess Pro</title>
 
 <style>
 body{
@@ -13,171 +12,230 @@ body{
   font-family:Arial;
 }
 
-.board{
-  display:grid;
-  grid-template-columns:repeat(8,50px);
-  justify-content:center;
-  margin-top:30px;
+/* MENU */
+.menu{
+  margin-top:50px;
 }
 
-.cell{
-  width:50px;
-  height:50px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:26px;
+button{
+  padding:10px 20px;
+  margin:10px;
   cursor:pointer;
 }
 
-.white{ background:#eee; }
-.black{ background:#555; color:white; }
+/* BOARD */
+.board{
+  display:grid;
+  grid-template-columns:repeat(8,60px);
+  justify-content:center;
+  margin-top:20px;
+}
 
-.selected{
+.cell{
+  width:60px;
+  height:60px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:30px;
+}
+
+/* DARK THEME BOARD */
+.white{ background:#64748b; }
+.black{ background:#1e293b; }
+
+/* PIECES */
+.white-piece{ color:#fff; }
+.black-piece{ color:#000; }
+
+/* HIGHLIGHT */
+.highlight{
   outline:3px solid yellow;
 }
-  .white-piece {
-  color: white;
-}
 
-.black-piece {
-  color: black;
-}
-  .white-piece {
-  color: #ffffff;
-}
-
-.black-piece {
-  color: #000000;
-}
-  .highlight {
-  outline: 3px solid yellow;
+/* TIMER */
+.timer{
+  margin-top:10px;
 }
 </style>
 </head>
 
 <body>
 
-<h2>♟ Chess (Basic Working)</h2>
-  
-<h3 id="turn">Turn: white</h3>
-<button onclick="resetGame()">Reset</button>
+<div id="menu" class="menu">
+  <h2>♟ Chess Mode</h2>
+  <button onclick="startGame('single')">Single Player</button>
+  <button onclick="startGame('multi')">Play with Friend</button>
+</div>
+
+<div id="settings" style="display:none;">
+  <h3>Select Side</h3>
+  <button onclick="setSide('white')">White</button>
+  <button onclick="setSide('black')">Black</button>
+
+  <h3>Difficulty</h3>
+  <button onclick="setDifficulty('easy')">Easy</button>
+  <button onclick="setDifficulty('medium')">Intermediate</button>
+  <button onclick="setDifficulty('hard')">Advanced</button>
+</div>
+
+<h3 id="turn"></h3>
+<div class="timer" id="timer"></div>
+
 <div class="board" id="board"></div>
-  
-let validMoves = [];
-  
+
 <script>
-let pieces = [
-  "♜","♞","♝","♛","♚","♝","♞","♜",
-  "♟","♟","♟","♟","♟","♟","♟","♟",
-  "","","","","","","","",
-  "","","","","","","","",
-  "","","","","","","","",
-  "","","","","","","","",
-  "♙","♙","♙","♙","♙","♙","♙","♙",
-  "♖","♘","♗","♕","♔","♗","♘","♖"
+let mode="", playerSide="white", difficulty="easy";
+let board=document.getElementById("board");
+
+let pieces=[
+"♜","♞","♝","♛","♚","♝","♞","♜",
+"♟","♟","♟","♟","♟","♟","♟","♟",
+"","","","","","","","",
+"","","","","","","","",
+"","","","","","","","",
+"","","","","","","","",
+"♙","♙","♙","♙","♙","♙","♙","♙",
+"♖","♘","♗","♕","♔","♗","♘","♖"
 ];
 
-const board = document.getElementById("board");
-let selected = null;
-let turn = "white";
+let selected=null, validMoves=[], turn="white";
 
-function isWhite(piece){
-  return "♙♖♘♗♕♔".includes(piece);
+/* START */
+function startGame(type){
+  mode=type;
+  document.getElementById("menu").style.display="none";
+  document.getElementById("settings").style.display="block";
 }
 
-function isBlack(piece){
-  return "♟♜♞♝♛♚".includes(piece);
+function setSide(side){
+  playerSide=side;
 }
 
-function renderBoard(){
+function setDifficulty(d){
+  difficulty=d;
+  document.getElementById("settings").style.display="none";
+  startBoard();
+}
+
+/* HELPERS */
+function isWhite(p){ return "♙♖♘♗♕♔".includes(p); }
+function isBlack(p){ return "♟♜♞♝♛♚".includes(p); }
+
+/* SIMPLE LEGAL MOVES */
+function getMoves(i){
+  let moves=[];
+  let r=Math.floor(i/8), c=i%8;
+
+  if(r>0) moves.push(i-8);
+  if(r<7) moves.push(i+8);
+  if(c>0) moves.push(i-1);
+  if(c<7) moves.push(i+1);
+
+  return moves;
+}
+
+/* RENDER */
+function render(){
   board.innerHTML="";
 
   pieces.forEach((p,i)=>{
-    const cell=document.createElement("div");
-    cell.classList.add("cell");
+    let cell=document.createElement("div");
+    cell.className="cell "+((Math.floor(i/8)+i%8)%2?"black":"white");
 
-    if((Math.floor(i/8)+i%8)%2==0){
-      cell.classList.add("white");
-    }else{
-      cell.classList.add("black");
-    }
+    cell.textContent=p;
 
-    cell.textContent = p;
+    if(isWhite(p)) cell.classList.add("white-piece");
+    if(isBlack(p)) cell.classList.add("black-piece");
 
-if("♙♖♘♗♕♔".includes(p)){
-  cell.classList.add("white-piece");
-}
+    cell.onclick=()=>clickCell(i,p);
 
-if("♟♜♞♝♛♚".includes(p)){
-  cell.classList.add("black-piece");
-}
-
-   cell.onclick = () => {
-
-  // FIRST CLICK (select piece)
-  if(selected === null){
-
-    if(p === "") return;
-
-    selected = i;
-    validMoves = getMoves(i);
-
-    renderBoard();
-
-    validMoves.forEach(m => {
-      board.children[m].classList.add("highlight");
-    });
-
-  }
-
-  // SECOND CLICK (move)
-  else {
-
-    // sirf allowed move pe hi chalega
-    if(validMoves.includes(i)){
-      pieces[i] = pieces[selected];
-      pieces[selected] = "";
-    }
-
-    selected = null;
-    validMoves = [];
-    renderBoard();
-  }
-
-};
-  board.appendChild(cell);
+    board.appendChild(cell);
   });
 
-  document.getElementById("turn").innerText = "Turn: " + turn;
+  document.getElementById("turn").innerText="Turn: "+turn;
 }
 
-function resetGame(){
-  location.reload();
+/* CLICK */
+function clickCell(i,p){
+
+  if(selected===null){
+
+    if(p==="") return;
+
+    if(turn==="white" && !isWhite(p)) return;
+    if(turn==="black" && !isBlack(p)) return;
+
+    selected=i;
+    validMoves=getMoves(i);
+
+    render();
+    validMoves.forEach(m=>board.children[m].classList.add("highlight"));
+  }
+
+  else{
+
+    if(validMoves.includes(i)){
+
+      let target=pieces[i];
+
+      if((isWhite(pieces[selected]) && isWhite(target)) ||
+         (isBlack(pieces[selected]) && isBlack(target))){
+        selected=null; render(); return;
+      }
+
+      pieces[i]=pieces[selected];
+      pieces[selected]="";
+
+      turn=(turn==="white")?"black":"white";
+
+      selected=null;
+      render();
+
+      if(mode==="single" && turn!==playerSide){
+        setTimeout(aiMove,500);
+      }
+    }
+    else{
+      selected=null;
+      render();
+    }
+  }
 }
 
-renderBoard();
+/* AI (basic random) */
+function aiMove(){
+  let allMoves=[];
 
-  function getMoves(index){
-  let moves = [];
+  pieces.forEach((p,i)=>{
+    if((turn==="white" && isWhite(p)) || (turn==="black" && isBlack(p))){
+      getMoves(i).forEach(m=>{
+        allMoves.push({from:i,to:m});
+      });
+    }
+  });
 
-  // simple forward moves (pawn type logic demo)
-  let row = Math.floor(index / 8);
-  let col = index % 8;
+  if(allMoves.length===0) return;
 
-  // upar
-  if(row > 0) moves.push(index - 8);
+  let move=allMoves[Math.floor(Math.random()*allMoves.length)];
 
-  // niche
-  if(row < 7) moves.push(index + 8);
+  pieces[move.to]=pieces[move.from];
+  pieces[move.from]="";
 
-  // left
-  if(col > 0) moves.push(index - 1);
+  turn=(turn==="white")?"black":"white";
+  render();
+}
 
-  // right
-  if(col < 7) moves.push(index + 1);
+/* TIMER */
+let seconds=0;
+setInterval(()=>{
+  seconds++;
+  document.getElementById("timer").innerText="Time: "+seconds+"s";
+},1000);
 
-  return moves;
+/* START */
+function startBoard(){
+  render();
 }
 </script>
 
