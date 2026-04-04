@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chess Pro</title>
+<meta charset="UTF-8">
+<title>Chess</title>
 
 <style>
 body{
@@ -12,80 +12,46 @@ body{
   font-family:Arial;
 }
 
-/* MENU */
-.menu{
-  margin-top:50px;
-}
-
-button{
-  padding:10px 20px;
-  margin:10px;
-  cursor:pointer;
-}
-
-/* BOARD */
 .board{
+  width:320px;
+  height:320px;
+  margin:20px auto;
   display:grid;
-  grid-template-columns:repeat(8,60px);
-  justify-content:center;
-  margin-top:20px;
+  grid-template-columns:repeat(8,1fr);
 }
 
 .cell{
-  width:60px;
-  height:60px;
+  width:40px;
+  height:40px;
   display:flex;
-  align-items:center;
   justify-content:center;
-  font-size:30px;
+  align-items:center;
+  font-size:22px;
+  cursor:pointer;
 }
 
-/* DARK THEME BOARD */
-.white{ background:#64748b; }
-.black{ background:#1e293b; }
+.white{ background:#e5e7eb; }
+.black{ background:#475569; }
 
-/* PIECES */
-.white-piece{ color:#fff; }
-.black-piece{ color:#000; }
-
-/* HIGHLIGHT */
 .highlight{
   outline:3px solid yellow;
 }
 
-/* TIMER */
-.timer{
-  margin-top:10px;
-}
+.white-piece{ color:white; }
+.black-piece{ color:black; }
+
 </style>
 </head>
 
 <body>
 
-<div id="menu" class="menu">
-  <h2>♟ Chess Mode</h2>
-  <button onclick="startGame('single')">Single Player</button>
-  <button onclick="startGame('multi')">Play with Friend</button>
-</div>
-
-<div id="settings" style="display:none;">
-  <h3>Select Side</h3>
-  <button onclick="setSide('white')">White</button>
-  <button onclick="setSide('black')">Black</button>
-
-  <h3>Difficulty</h3>
-  <button onclick="setDifficulty('easy')">Easy</button>
-  <button onclick="setDifficulty('medium')">Intermediate</button>
-  <button onclick="setDifficulty('hard')">Advanced</button>
-</div>
-
-<h3 id="turn"></h3>
-<div class="timer" id="timer"></div>
+<h2>♟ Chess (Working)</h2>
+<h3 id="turn">Turn: white</h3>
 
 <div class="board" id="board"></div>
 
 <script>
-let mode="", playerSide="white", difficulty="easy";
+
 let board=document.getElementById("board");
 
 let pieces=[
@@ -99,173 +65,19 @@ let pieces=[
 "♖","♘","♗","♕","♔","♗","♘","♖"
 ];
 
-  let selected = null;
-let validMoves = [];
-let turn = "white";
+let selected=null;
+let validMoves=[];
+let turn="white";
 
-/* HELPERS */
 function isWhite(p){ return "♙♖♘♗♕♔".includes(p); }
 function isBlack(p){ return "♟♜♞♝♛♚".includes(p); }
 
-/* MOVE LOGIC */
-function getMoves(i){
-  let moves = [];
-  let r = Math.floor(i/8), c = i%8;
-  let p = pieces[i];
-
-  // PAWN
-  if(p==="♙"){ // white pawn
-    if(pieces[i-8]==="") moves.push(i-8);
-
-    if(r===6 && pieces[i-8]==="" && pieces[i-16]===""){
-      moves.push(i-16);
-    }
-
-    if(c>0 && isBlack(pieces[i-9])) moves.push(i-9);
-    if(c<7 && isBlack(pieces[i-7])) moves.push(i-7);
-  }
-
-  if(p==="♟"){ // black pawn
-    if(pieces[i+8]==="") moves.push(i+8);
-
-    if(r===1 && pieces[i+8]==="" && pieces[i+16]===""){
-      moves.push(i+16);
-    }
-
-    if(c>0 && isWhite(pieces[i+7])) moves.push(i+7);
-    if(c<7 && isWhite(pieces[i+9])) moves.push(i+9);
-  }
-
-  // ROOK (basic straight)
-  if(p==="♖" || p==="♜"){
-    for(let x=i-8; x>=0; x-=8) moves.push(x);
-    for(let x=i+8; x<64; x+=8) moves.push(x);
-    for(let x=i-1; x>=0 && x%8!==7; x--) moves.push(x);
-    for(let x=i+1; x<64 && x%8!==0; x++) moves.push(x);
-  }
-
-  // KNIGHT
-  if(p==="♘" || p==="♞"){
-    let steps=[-17,-15,-10,-6,6,10,15,17];
-    steps.forEach(s=>{
-      let t=i+s;
-      if(t>=0 && t<64) moves.push(t);
-    });
-  }
-
-  return moves;
-}
-
-/* CLICK */
-function clickCell(i,p){
-
-  // SELECT
-  if(selected===null){
-    if(p==="") return;
-
-    if(turn==="white" && !isWhite(p)) return;
-    if(turn==="black" && !isBlack(p)) return;
-
-    selected=i;
-    validMoves=getMoves(i);
-
-    render();
-    validMoves.forEach(m=>{
-      board.children[m].classList.add("highlight");
-    });
-  }
-
-  // MOVE
-  else{
-
-    if(validMoves.includes(i)){
-
-      let target=pieces[i];
-
-      if(
-        (isWhite(pieces[selected]) && isWhite(target)) ||
-        (isBlack(pieces[selected]) && isBlack(target))
-      ){
-        selected=null; render(); return;
-      }
-
-      pieces[i]=pieces[selected];
-      pieces[selected]="";
-
-      turn=(turn==="white")?"black":"white";
-    }
-
-    selected=null;
-    validMoves=[];
-    render();
-  }
-}
-
-let selected=null, validMoves=[], turn="white";
-
-/* START */
-function startGame(type){
-  mode=type;
-  document.getElementById("menu").style.display="none";
-  document.getElementById("settings").style.display="block";
-}
-
-function setSide(side){
-  playerSide=side;
-}
-
-function setDifficulty(d){
-  difficulty=d;
-  document.getElementById("settings").style.display="none";
-  startBoard();
-}
-
-/* HELPERS */
-function isWhite(p){ return "♙♖♘♗♕♔".includes(p); }
-function isBlack(p){ return "♟♜♞♝♛♚".includes(p); }
-
-/* SIMPLE LEGAL MOVES */
-function getMoves(i){
-  let moves=[];
-  let r=Math.floor(i/8), c=i%8;
-  let p=pieces[i];
-
-  // WHITE PAWN
-  if(p==="♙"){
-    if(pieces[i-8]==="") moves.push(i-8);
-
-    // first move double
-    if(r===6 && pieces[i-8]==="" && pieces[i-16]===""){
-      moves.push(i-16);
-    }
-
-    // attack
-    if(c>0 && isBlack(pieces[i-9])) moves.push(i-9);
-    if(c<7 && isBlack(pieces[i-7])) moves.push(i-7);
-  }
-
-  // BLACK PAWN
-  if(p==="♟"){
-    if(pieces[i+8]==="") moves.push(i+8);
-
-    if(r===1 && pieces[i+8]==="" && pieces[i+16]===""){
-      moves.push(i+16);
-    }
-
-    if(c>0 && isWhite(pieces[i+7])) moves.push(i+7);
-    if(c<7 && isWhite(pieces[i+9])) moves.push(i+9);
-  }
-
-  return moves;
-}
-
-/* RENDER */
 function render(){
   board.innerHTML="";
-
   pieces.forEach((p,i)=>{
     let cell=document.createElement("div");
-    cell.className="cell "+((Math.floor(i/8)+i%8)%2?"black":"white");
+
+    cell.className="cell "+((Math.floor(i/8)+i)%2==0?"white":"black");
 
     cell.textContent=p;
 
@@ -280,87 +92,65 @@ function render(){
   document.getElementById("turn").innerText="Turn: "+turn;
 }
 
-/* CLICK */
+function getMoves(i){
+  let moves=[];
+  let r=Math.floor(i/8), c=i%8;
+  let p=pieces[i];
+
+  // pawn
+  if(p==="♙"){
+    if(pieces[i-8]==="") moves.push(i-8);
+    if(r===6 && pieces[i-16]==="") moves.push(i-16);
+  }
+
+  if(p==="♟"){
+    if(pieces[i+8]==="") moves.push(i+8);
+    if(r===1 && pieces[i+16]==="") moves.push(i+16);
+  }
+
+  // knight
+  if(p==="♘"||p==="♞"){
+    let steps=[-17,-15,-10,-6,6,10,15,17];
+    steps.forEach(s=>{
+      let t=i+s;
+      if(t>=0&&t<64) moves.push(t);
+    });
+  }
+
+  return moves;
+}
+
 function clickCell(i,p){
 
   if(selected===null){
-
     if(p==="") return;
 
-    if(turn==="white" && !isWhite(p)) return;
-    if(turn==="black" && !isBlack(p)) return;
+    if(turn==="white"&&!isWhite(p)) return;
+    if(turn==="black"&&!isBlack(p)) return;
 
     selected=i;
     validMoves=getMoves(i);
 
     render();
-    validMoves.forEach(m=>board.children[m].classList.add("highlight"));
+    validMoves.forEach(m=>{
+      board.children[m].classList.add("highlight");
+    });
   }
-
   else{
-
     if(validMoves.includes(i)){
-
-      let target=pieces[i];
-
-      if((isWhite(pieces[selected]) && isWhite(target)) ||
-         (isBlack(pieces[selected]) && isBlack(target))){
-        selected=null; render(); return;
-      }
-
       pieces[i]=pieces[selected];
       pieces[selected]="";
-
       turn=(turn==="white")?"black":"white";
-
-      selected=null;
-      render();
-
-      if(mode==="single" && turn!==playerSide){
-        setTimeout(aiMove,500);
-      }
     }
-    else{
-      selected=null;
-      render();
-    }
+
+    selected=null;
+    validMoves=[];
+    render();
   }
 }
 
-/* AI (basic random) */
-function aiMove(){
-  let allMoves=[];
+render();
 
-  pieces.forEach((p,i)=>{
-    if((turn==="white" && isWhite(p)) || (turn==="black" && isBlack(p))){
-      getMoves(i).forEach(m=>{
-        allMoves.push({from:i,to:m});
-      });
-    }
-  });
-
-  if(allMoves.length===0) return;
-
-  let move=allMoves[Math.floor(Math.random()*allMoves.length)];
-
-  pieces[move.to]=pieces[move.from];
-  pieces[move.from]="";
-
-  turn=(turn==="white")?"black":"white";
-  render();
-}
-
-/* TIMER */
-let seconds=0;
-setInterval(()=>{
-  seconds++;
-  document.getElementById("timer").innerText="Time: "+seconds+"s";
-},1000);
-
-/* START */
-function startBoard(){
-  render();
-}
 </script>
 
 </body>
