@@ -126,11 +126,33 @@ function isBlack(p){ return "♟♜♞♝♛♚".includes(p); }
 function getMoves(i){
   let moves=[];
   let r=Math.floor(i/8), c=i%8;
+  let p=pieces[i];
 
-  if(r>0) moves.push(i-8);
-  if(r<7) moves.push(i+8);
-  if(c>0) moves.push(i-1);
-  if(c<7) moves.push(i+1);
+  // WHITE PAWN
+  if(p==="♙"){
+    if(pieces[i-8]==="") moves.push(i-8);
+
+    // first move double
+    if(r===6 && pieces[i-8]==="" && pieces[i-16]===""){
+      moves.push(i-16);
+    }
+
+    // attack
+    if(c>0 && isBlack(pieces[i-9])) moves.push(i-9);
+    if(c<7 && isBlack(pieces[i-7])) moves.push(i-7);
+  }
+
+  // BLACK PAWN
+  if(p==="♟"){
+    if(pieces[i+8]==="") moves.push(i+8);
+
+    if(r===1 && pieces[i+8]==="" && pieces[i+16]===""){
+      moves.push(i+16);
+    }
+
+    if(c>0 && isWhite(pieces[i+7])) moves.push(i+7);
+    if(c<7 && isWhite(pieces[i+9])) moves.push(i+9);
+  }
 
   return moves;
 }
