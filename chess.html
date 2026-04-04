@@ -1,157 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Chess</title>
-
-<style>
-body{
-  background:#020617;
-  color:white;
-  text-align:center;
-  font-family:Arial;
-}
-
-.board{
-  width:320px;
-  height:320px;
-  margin:20px auto;
-  display:grid;
-  grid-template-columns:repeat(8,1fr);
-}
-
-.cell{
-  width:40px;
-  height:40px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:22px;
-  cursor:pointer;
-}
-
-.white{ background:#e5e7eb; }
-.black{ background:#475569; }
-
-.highlight{
-  outline:3px solid yellow;
-}
-
-.white-piece{ color:white; }
-.black-piece{ color:black; }
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Game</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard.min.css">
+    <style>
+        #board {
+            width: 400px;
+            margin: 20px auto;
+        }
+        body {
+            background-color: #202020;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #status {
+            margin: 10px;
+        }
+    </style>
 </head>
-
 <body>
+    <h2>Chess Game</h2>
+    <div id="board"></div>
+    <p id="status"></p>
+    <button onclick="resetGame()">Reset Game</button>
 
-<h2>♟ Chess (Working)</h2>
-<h3 id="turn">Turn: white</h3>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.13.4/chess.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard.min.js"></script>
+    <script>
+        const game = new Chess();
+        const board = Chessboard('board', {
+            draggable: true,
+            position: 'start',
+            onDragStart: function (source, piece, position, orientation) {
+                // Only allow dragging of the correct color piece
+                if (game.turn() === 'w' && piece.search(/^b/) !== -1) return false;
+                if (game.turn() === 'b' && piece.search(/^w/) !== -1) return false;
+            },
+            onDrop: function (source, target) {
+                const move = game.move({
+                    from: source,
+                    to: target,
+                    promotion: 'q'
+                });
+                if (move === null) return 'snapback';
+                updateStatus();
+            },
+            onSnapEnd: function () {
+                board.position(game.fen());
+            }
+        });
 
-<div class="board" id="board"></div>
+        function updateStatus() {
+            let status = '';
+            const moveColor = (game.turn() === 'w') ? 'White' : 'Black';
+            if (game.in_checkmate()) {
+                status = 'Game over, ' + moveColor + ' is checkmated.';
+            } else if (game.in_draw()) {
+                status = 'Game over, draw';
+            } else {
+                status = moveColor + ' to move';
+                if (game.in_check()) {
+                    status += ', ' + moveColor + ' is in check';
+                }
+            }
+            document.getElementById('status').innerHTML = status;
+        }
 
-<script>
+        function resetGame() {
+            game.reset();
+            board.start();
+            updateStatus();
+        }
 
-let board=document.getElementById("board");
-
-let pieces=[
-"♜","♞","♝","♛","♚","♝","♞","♜",
-"♟","♟","♟","♟","♟","♟","♟","♟",
-"","","","","","","","",
-"","","","","","","","",
-"","","","","","","","",
-"","","","","","","","",
-"♙","♙","♙","♙","♙","♙","♙","♙",
-"♖","♘","♗","♕","♔","♗","♘","♖"
-];
-
-let selected=null;
-let validMoves=[];
-let turn="white";
-
-function isWhite(p){ return "♙♖♘♗♕♔".includes(p); }
-function isBlack(p){ return "♟♜♞♝♛♚".includes(p); }
-
-function render(){
-  board.innerHTML="";
-  pieces.forEach((p,i)=>{
-    let cell=document.createElement("div");
-
-    cell.className="cell "+((Math.floor(i/8)+i)%2==0?"white":"black");
-
-    cell.textContent=p;
-
-    if(isWhite(p)) cell.classList.add("white-piece");
-    if(isBlack(p)) cell.classList.add("black-piece");
-
-    cell.onclick=()=>clickCell(i,p);
-
-    board.appendChild(cell);
-  });
-
-  document.getElementById("turn").innerText="Turn: "+turn;
-}
-
-function getMoves(i){
-  let moves=[];
-  let r=Math.floor(i/8), c=i%8;
-  let p=pieces[i];
-
-  // pawn
-  if(p==="♙"){
-    if(pieces[i-8]==="") moves.push(i-8);
-    if(r===6 && pieces[i-16]==="") moves.push(i-16);
-  }
-
-  if(p==="♟"){
-    if(pieces[i+8]==="") moves.push(i+8);
-    if(r===1 && pieces[i+16]==="") moves.push(i+16);
-  }
-
-  // knight
-  if(p==="♘"||p==="♞"){
-    let steps=[-17,-15,-10,-6,6,10,15,17];
-    steps.forEach(s=>{
-      let t=i+s;
-      if(t>=0&&t<64) moves.push(t);
-    });
-  }
-
-  return moves;
-}
-
-function clickCell(i,p){
-
-  if(selected===null){
-    if(p==="") return;
-
-    if(turn==="white"&&!isWhite(p)) return;
-    if(turn==="black"&&!isBlack(p)) return;
-
-    selected=i;
-    validMoves=getMoves(i);
-
-    render();
-    validMoves.forEach(m=>{
-      board.children[m].classList.add("highlight");
-    });
-  }
-  else{
-    if(validMoves.includes(i)){
-      pieces[i]=pieces[selected];
-      pieces[selected]="";
-      turn=(turn==="white")?"black":"white";
-    }
-
-    selected=null;
-    validMoves=[];
-    render();
-  }
-}
-
-render();
-
-</script>
-
+        updateStatus();
+    </script>
 </body>
 </html>
