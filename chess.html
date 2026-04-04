@@ -50,6 +50,9 @@ body{
 .black-piece {
   color: #000000;
 }
+  .highlight {
+  outline: 3px solid yellow;
+}
 </style>
 </head>
 
@@ -108,27 +111,28 @@ if("♟♜♞♝♛♚".includes(p)){
   cell.classList.add("black-piece");
 }
 
-    cell.onclick=()=>{
-      if(selected===null){
-        if(p==="") return;
+   cell.onclick = () => {
 
-        if(turn==="white" && !isWhite(p)) return;
-        if(turn==="black" && !isBlack(p)) return;
+  if(selected === null){
+    if(p === "") return;
 
-        selected=i;
-        cell.classList.add("selected");
-      }else{
-        pieces[i]=pieces[selected];
-        pieces[selected]="";
+    selected = i;
 
-        turn = (turn==="white") ? "black" : "white";
+    let moves = getMoves(i);
 
-        selected=null;
-        renderBoard();
-      }
-    };
+    renderBoard();
 
-    board.appendChild(cell);
+    moves.forEach(m => {
+      board.children[m].classList.add("highlight");
+    });
+
+  } else {
+    pieces[i] = pieces[selected];
+    pieces[selected] = "";
+    selected = null;
+    renderBoard();
+  }
+} board.appendChild(cell);
   });
 
   document.getElementById("turn").innerText = "Turn: " + turn;
@@ -139,6 +143,28 @@ function resetGame(){
 }
 
 renderBoard();
+
+  function getMoves(index){
+  let moves = [];
+
+  // simple forward moves (pawn type logic demo)
+  let row = Math.floor(index / 8);
+  let col = index % 8;
+
+  // upar
+  if(row > 0) moves.push(index - 8);
+
+  // niche
+  if(row < 7) moves.push(index + 8);
+
+  // left
+  if(col > 0) moves.push(index - 1);
+
+  // right
+  if(col < 7) moves.push(index + 1);
+
+  return moves;
+}
 </script>
 
 </body>
