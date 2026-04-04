@@ -99,6 +99,108 @@ let pieces=[
 "♖","♘","♗","♕","♔","♗","♘","♖"
 ];
 
+  let selected = null;
+let validMoves = [];
+let turn = "white";
+
+/* HELPERS */
+function isWhite(p){ return "♙♖♘♗♕♔".includes(p); }
+function isBlack(p){ return "♟♜♞♝♛♚".includes(p); }
+
+/* MOVE LOGIC */
+function getMoves(i){
+  let moves = [];
+  let r = Math.floor(i/8), c = i%8;
+  let p = pieces[i];
+
+  // PAWN
+  if(p==="♙"){ // white pawn
+    if(pieces[i-8]==="") moves.push(i-8);
+
+    if(r===6 && pieces[i-8]==="" && pieces[i-16]===""){
+      moves.push(i-16);
+    }
+
+    if(c>0 && isBlack(pieces[i-9])) moves.push(i-9);
+    if(c<7 && isBlack(pieces[i-7])) moves.push(i-7);
+  }
+
+  if(p==="♟"){ // black pawn
+    if(pieces[i+8]==="") moves.push(i+8);
+
+    if(r===1 && pieces[i+8]==="" && pieces[i+16]===""){
+      moves.push(i+16);
+    }
+
+    if(c>0 && isWhite(pieces[i+7])) moves.push(i+7);
+    if(c<7 && isWhite(pieces[i+9])) moves.push(i+9);
+  }
+
+  // ROOK (basic straight)
+  if(p==="♖" || p==="♜"){
+    for(let x=i-8; x>=0; x-=8) moves.push(x);
+    for(let x=i+8; x<64; x+=8) moves.push(x);
+    for(let x=i-1; x>=0 && x%8!==7; x--) moves.push(x);
+    for(let x=i+1; x<64 && x%8!==0; x++) moves.push(x);
+  }
+
+  // KNIGHT
+  if(p==="♘" || p==="♞"){
+    let steps=[-17,-15,-10,-6,6,10,15,17];
+    steps.forEach(s=>{
+      let t=i+s;
+      if(t>=0 && t<64) moves.push(t);
+    });
+  }
+
+  return moves;
+}
+
+/* CLICK */
+function clickCell(i,p){
+
+  // SELECT
+  if(selected===null){
+    if(p==="") return;
+
+    if(turn==="white" && !isWhite(p)) return;
+    if(turn==="black" && !isBlack(p)) return;
+
+    selected=i;
+    validMoves=getMoves(i);
+
+    render();
+    validMoves.forEach(m=>{
+      board.children[m].classList.add("highlight");
+    });
+  }
+
+  // MOVE
+  else{
+
+    if(validMoves.includes(i)){
+
+      let target=pieces[i];
+
+      if(
+        (isWhite(pieces[selected]) && isWhite(target)) ||
+        (isBlack(pieces[selected]) && isBlack(target))
+      ){
+        selected=null; render(); return;
+      }
+
+      pieces[i]=pieces[selected];
+      pieces[selected]="";
+
+      turn=(turn==="white")?"black":"white";
+    }
+
+    selected=null;
+    validMoves=[];
+    render();
+  }
+}
+
 let selected=null, validMoves=[], turn="white";
 
 /* START */
