@@ -3,121 +3,150 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Game Hub</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+<title>GAME HUB</title>
 
 <style>
 *{
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family:'Poppins',sans-serif;
+  font-family:sans-serif;
 }
 
 body{
   height:100vh;
+  background:linear-gradient(135deg,#020617,#0f172a,#020617);
+  overflow:hidden;
+}
+
+/* 3D SCENE */
+.scene{
+  width:100%;
+  height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
-  background:#020617;
-  color:white;
+  perspective:1200px;
 }
 
-/* BACKGROUND GLOW */
-body::before{
-  content:"";
-  position:absolute;
-  width:500px;
-  height:500px;
-  background:#38bdf8;
-  filter:blur(120px);
-  top:-100px;
-  left:-100px;
-}
-
-/* CONTAINER */
-.container{
+/* CARD */
+.card{
+  width:90%;
+  max-width:400px;
+  padding:40px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(15px);
   text-align:center;
-  z-index:2;
-  animation:fade 1.2s ease;
+  transform-style:preserve-3d;
+  transition:0.3s;
+  box-shadow:0 0 40px rgba(0,0,0,0.6);
 }
 
+/* TITLE */
 h1{
-  font-size:50px;
-  color:#38bdf8;
-  text-shadow:0 0 20px #38bdf8;
+  font-size:32px;
+  margin-bottom:10px;
+  transform:translateZ(50px);
 }
 
 p{
-  margin:10px 0 25px;
-  color:#94a3b8;
+  color:#aaa;
+  margin-bottom:30px;
+  transform:translateZ(40px);
 }
 
-/* BUTTONS */
-.buttons{
-  display:flex;
-  gap:20px;
-  justify-content:center;
-}
-
-button{
-  padding:12px 25px;
-  border-radius:10px;
+/* BUTTON */
+.btn{
+  padding:14px 30px;
+  margin:10px;
   border:none;
-  cursor:pointer;
+  border-radius:12px;
   font-size:16px;
-  transition:0.3s;
+  cursor:pointer;
+  transition:0.2s;
+  transform:translateZ(30px);
 }
 
-/* PLAY */
+/* PLAY BUTTON */
 .play{
   background:#22c55e;
   color:black;
+  box-shadow:0 5px 0 #15803d;
 }
 
-.play:hover{
-  transform:scale(1.1);
-  box-shadow:0 0 20px #22c55e;
-}
-
-/* LOGIN */
+/* LOGIN BUTTON */
 .login{
   background:transparent;
-  border:2px solid #38bdf8;
   color:#38bdf8;
+  border:2px solid #38bdf8;
 }
 
-.login:hover{
+/* CLICK ANIMATION */
+.btn:active{
+  transform:translateY(5px) scale(0.95);
+  box-shadow:none;
+}
+
+/* FLOATING PARTICLES */
+.particle{
+  position:absolute;
+  width:8px;
+  height:8px;
   background:#38bdf8;
-  color:black;
-  box-shadow:0 0 20px #38bdf8;
+  border-radius:50%;
+  opacity:0.3;
+  animation:float linear infinite;
 }
 
-@keyframes fade{
-  from{opacity:0; transform:translateY(30px);}
-  to{opacity:1; transform:translateY(0);}
+@keyframes float{
+  from{ transform:translateY(100vh); }
+  to{ transform:translateY(-10vh); }
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-  <h1>🎮 GAME HUB</h1>
-  <p>Play the best browser games anytime</p>
+<div class="scene">
+  <div class="card" id="card">
+    <h1>🎮 GAME HUB</h1>
+    <p>Play the best browser games anytime</p>
 
-  <div class="buttons">
-    <button class="play" onclick="goGame()">▶ Play</button>
-    <button class="login">🔐 Login</button>
+    <button class="btn play" onclick="startGame()">▶ Play</button>
+    <button class="btn login">🔒 Login</button>
   </div>
 </div>
 
 <script>
-function goGame(){
-  window.location.href="./game.html";
+
+/* 🔥 3D TILT (NO CDN) */
+const card = document.getElementById("card");
+
+document.addEventListener("mousemove", (e)=>{
+  let x = (window.innerWidth/2 - e.pageX)/20;
+  let y = (window.innerHeight/2 - e.pageY)/20;
+
+  card.style.transform = `
+    rotateY(${x}deg)
+    rotateX(${y}deg)
+  `;
+});
+
+/* 🔥 BUTTON ACTION */
+function startGame(){
+  window.location.href = "game.html";
 }
+
+/* 🔥 PARTICLES */
+for(let i=0;i<30;i++){
+  let p = document.createElement("div");
+  p.className="particle";
+  p.style.left = Math.random()*100+"%";
+  p.style.animationDuration = (5+Math.random()*5)+"s";
+  document.body.appendChild(p);
+}
+
 </script>
 
 </body>
