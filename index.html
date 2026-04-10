@@ -147,6 +147,33 @@ for(let i=0;i<30;i++){
   document.body.appendChild(p);
 }
 
+  
+const clickSound = new Audio("click.mp3");
+const hoverSound = new Audio("hover.mp3");
+const bgMusic = new Audio("bg.mp3");
+
+bgMusic.loop = true;
+bgMusic.volume = 0.3;
+
+/* play bg music after first tap (mobile restriction fix) */
+document.body.addEventListener("click", ()=>{
+  bgMusic.play();
+},{once:true});
+
+/* buttons sound */
+document.querySelectorAll(".btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    clickSound.currentTime = 0;
+    clickSound.play();
+  });
+
+  btn.addEventListener("mouseenter", ()=>{
+    hoverSound.currentTime = 0;
+    hoverSound.play();
+  });
+});
+
+
 </script>
 
 </body>
