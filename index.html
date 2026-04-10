@@ -15,11 +15,19 @@
 
 body{
   height:100vh;
-  background:linear-gradient(135deg,#020617,#0f172a,#020617);
   overflow:hidden;
+  background:radial-gradient(circle,#0ea5e9,#020617);
 }
 
-/* 3D SCENE */
+/* BACKGROUND DEPTH */
+.bg{
+  position:absolute;
+  width:200%;
+  height:200%;
+  z-index:-1;
+}
+
+/* SCENE */
 .scene{
   width:100%;
   height:100vh;
@@ -39,67 +47,60 @@ body{
   backdrop-filter:blur(15px);
   text-align:center;
   transform-style:preserve-3d;
-  transition:0.3s;
-  box-shadow:0 0 40px rgba(0,0,0,0.6);
+  transition:0.2s;
+  box-shadow:0 30px 60px rgba(0,0,0,0.7);
 }
-  .card:hover{
-  transform:translateY(-15px) scale(1.05) rotateX(5deg);
-  box-shadow:0 30px 60px rgba(0,0,0,0.8);
+
+/* LAYERS */
+.layer{
+  transition:0.2s;
 }
 
 /* TITLE */
 h1{
-  animation:pop 1s ease;
-}
-
-@keyframes pop{
-  0%{transform:scale(0) rotate(-10deg);}
-  60%{transform:scale(1.2);}
-  100%{transform:scale(1);}
-}
-  h1{
   font-size:32px;
   margin-bottom:10px;
-  transform:translateZ(50px);
 }
 
+/* TEXT */
 p{
-  color:#aaa;
-  margin-bottom:30px;
-  transform:translateZ(40px);
-}
-body::before{
-  content:"";
-  position:absolute;
-  width:300px;
-  height:300px;
-  background:#38bdf8;
-  filter:blur(120px);
-  top:20%;
-  left:10%;
-  animation:move 8s infinite alternate;
+  color:#ccc;
+  margin-bottom:25px;
 }
 
-@keyframes move{
-  from{transform:translateX(0);}
-  to{transform:translateX(200px);}
-}
 /* BUTTON */
 .btn{
-  padding:14px 30px;
+  padding:14px 25px;
   margin:10px;
   border:none;
-  border-radius:12px;
+  border-radius:10px;
   font-size:16px;
   cursor:pointer;
-  transition:0.2s;
-  transform:translateZ(30px);
-}
-  .btn{
   position:relative;
   overflow:hidden;
+  transition:0.2s;
 }
 
+/* PLAY */
+.play{
+  background:#22c55e;
+  color:black;
+  box-shadow:0 5px 0 #15803d;
+}
+
+/* LOGIN */
+.login{
+  background:transparent;
+  border:2px solid #38bdf8;
+  color:#38bdf8;
+}
+
+/* CLICK PRESS */
+.btn:active{
+  transform:scale(0.9) translateY(5px);
+}
+
+/* RIPPLE */
 .btn span{
   position:absolute;
   background:rgba(255,255,255,0.4);
@@ -115,34 +116,14 @@ body::before{
   }
 }
 
-/* PLAY BUTTON */
-.play{
-  background:#22c55e;
-  color:black;
-  box-shadow:0 5px 0 #15803d;
-}
-
-/* LOGIN BUTTON */
-.login{
-  background:transparent;
-  color:#38bdf8;
-  border:2px solid #38bdf8;
-}
-
-/* CLICK ANIMATION */
-.btn:active{
-  transform:translateY(5px) scale(0.95);
-  box-shadow:none;
-}
-
-/* FLOATING PARTICLES */
+/* FLOAT PARTICLES */
 .particle{
   position:absolute;
-  width:8px;
-  height:8px;
-  background:#38bdf8;
-  border-radius:50%;
+  width:6px;
+  height:6px;
+  background:white;
   opacity:0.3;
+  border-radius:50%;
   animation:float linear infinite;
 }
 
@@ -155,71 +136,82 @@ body::before{
 
 <body>
 
+<div class="bg"></div>
+
 <div class="scene">
   <div class="card" id="card">
-    <h1>🎮 GAME HUB</h1>
-    <p>Play the best browser games anytime</p>
 
-    <button class="btn play" onclick="startGame()">▶ Play</button>
-    <button class="btn login">🔒 Login</button>
+    <h1 class="layer" data-depth="60">🎮 GAME HUB</h1>
+    <p class="layer" data-depth="40">Play the best games anytime</p>
+
+    <button class="btn play layer" data-depth="50" onclick="startGame()">▶ Play</button>
+    <button class="btn login layer" data-depth="50">Login</button>
+
   </div>
 </div>
 
 <script>
 
-/* 🔥 3D TILT (NO CDN) */
+/* 🔥 3D SYSTEM */
 const card = document.getElementById("card");
 
-document.addEventListener("mousemove", (e)=>{
-  let x = (window.innerWidth/2 - e.pageX)/20;
-  let y = (window.innerHeight/2 - e.pageY)/20;
+document.addEventListener("mousemove",(e)=>{
+  let x = (window.innerWidth/2 - e.pageX)/25;
+  let y = (window.innerHeight/2 - e.pageY)/25;
 
-  card.style.transform = `
-    rotateY(${x}deg)
-    rotateX(${y}deg)
-  `;
+  card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+
+  document.querySelectorAll(".layer").forEach(layer=>{
+    let depth = layer.getAttribute("data-depth");
+
+    layer.style.transform = `
+      translateZ(${depth}px)
+      translateX(${x*2}px)
+      translateY(${y*2}px)
+    `;
+  });
+
+  document.querySelector(".bg").style.transform =
+    `translate(-${e.pageX/50}px,-${e.pageY/50}px)`;
 });
 
-/* 🔥 BUTTON ACTION */
+/* 🔥 BUTTON RIPPLE */
+document.querySelectorAll(".btn").forEach(btn=>{
+  btn.addEventListener("click",function(e){
+    let ripple=document.createElement("span");
+
+    ripple.style.left=e.offsetX+"px";
+    ripple.style.top=e.offsetY+"px";
+
+    this.appendChild(ripple);
+
+    setTimeout(()=>ripple.remove(),600);
+  });
+});
+
+/* 🔥 NAVIGATION */
 function startGame(){
-  window.location.href = "game.html";
+  window.location.href="game.html";
 }
 
 /* 🔥 PARTICLES */
 for(let i=0;i<30;i++){
-  let p = document.createElement("div");
+  let p=document.createElement("div");
   p.className="particle";
-  p.style.left = Math.random()*100+"%";
-  p.style.animationDuration = (5+Math.random()*5)+"s";
+  p.style.left=Math.random()*100+"%";
+  p.style.animationDuration=(5+Math.random()*5)+"s";
   document.body.appendChild(p);
 }
 
-  
-const clickSound = new Audio("click.mp3");
-const hoverSound = new Audio("hover.mp3");
-const bgMusic = new Audio("bg.mp3");
+/* 🔥 SOUND SYSTEM */
+const clickSound=new Audio("click.mp3");
 
-bgMusic.loop = true;
-bgMusic.volume = 0.3;
-
-/* play bg music after first tap (mobile restriction fix) */
-document.body.addEventListener("click", ()=>{
-  bgMusic.play();
-},{once:true});
-
-/* buttons sound */
 document.querySelectorAll(".btn").forEach(btn=>{
-  btn.addEventListener("click", ()=>{
-    clickSound.currentTime = 0;
+  btn.addEventListener("click",()=>{
+    clickSound.currentTime=0;
     clickSound.play();
   });
-
-  btn.addEventListener("mouseenter", ()=>{
-    hoverSound.currentTime = 0;
-    hoverSound.play();
-  });
 });
-
 
 </script>
 
