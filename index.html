@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gamer Zone - Epic Gaming Hub</title>
+    <title>Gamer Zone - Battle Arena</title>
     <style>
         * {
             margin: 0;
@@ -18,25 +18,13 @@
 
         body {
             font-family: 'Courier New', monospace;
-            background: 
-                /* Dark Gaming Base */
-                linear-gradient(135deg, #0a0a23, #1a0033, #000428),
-                /* Explosions */
-                radial-gradient(circle at 30% 20%, rgba(255,100,0,0.3) 0%, transparent 40%),
-                radial-gradient(circle at 70% 80%, rgba(255,50,50,0.2) 0%, transparent 40%);
-            background-size: 400% 400%, 300px 300px, 400px 400px;
-            animation: bgShift 12s ease infinite;
+            background: linear-gradient(135deg, #1a0a23 0%, #2a1a43 50%, #0a0a23 100%);
             position: relative;
+            perspective: 1500px;
         }
 
-        @keyframes bgShift {
-            0%, 100% { background-position: 0% 50%, 0% 0%, 0% 100%; }
-            33% { background-position: 100% 50%, 100% 100%, 100% 0%; }
-            66% { background-position: 50% 50%, 50% 50%, 50% 50%; }
-        }
-
-        /* Firing Bullets Canvas */
-        #gameCanvas {
+        /* Battle Canvas */
+        #battleCanvas {
             position: fixed;
             top: 0;
             left: 0;
@@ -44,21 +32,6 @@
             height: 100%;
             z-index: 1;
             pointer-events: none;
-        }
-
-        /* Explosion Effects */
-        .explosion {
-            position: fixed;
-            pointer-events: none;
-            z-index: 2;
-            border-radius: 50%;
-            background: radial-gradient(circle, #ffaa00, #ff4400, transparent);
-            animation: explode 0.8s ease-out forwards;
-        }
-
-        @keyframes explode {
-            0% { transform: scale(0); opacity: 1; }
-            100% { transform: scale(8); opacity: 0; }
         }
 
         /* Main Container */
@@ -75,9 +48,9 @@
             padding: 20px;
         }
 
-        /* 3D GAMER ZONE Logo */
+        /* 3D Logo */
         .logo-container {
-            perspective: 1000px;
+            perspective: 1200px;
             margin-bottom: 2rem;
             opacity: 0;
             transform: translateY(60px) rotateX(30deg);
@@ -85,296 +58,266 @@
 
         .logo {
             transform-style: preserve-3d;
-            position: relative;
         }
 
-        /* Logo Controller */
         .logo-icon {
-            width: clamp(140px, 28vw, 240px);
-            height: clamp(140px, 28vw, 240px);
-            background: 
-                conic-gradient(#ff0040, #ffaa00, #ffff00, #00ff88, #00ccff, #ff00ff);
+            width: clamp(160px, 30vw, 280px);
+            height: clamp(160px, 30vw, 280px);
+            background: conic-gradient(#ff0040, #ffaa00, #ffff00, #00ff88, #00ccff);
             border-radius: 50%;
-            position: relative;
-            margin-bottom: 1.2rem;
-            animation: logo3DRotate 5s linear infinite, logoPulse 2s ease-in-out infinite alternate;
-            box-shadow: 
-                0 0 60px rgba(255,0,64,0.7),
-                0 20px 60px rgba(0,0,0,0.5),
-                inset 0 0 60px rgba(255,255,255,0.2);
-            transform: rotateX(20deg) rotateY(20deg);
+            margin-bottom: 1.5rem;
+            animation: logoBattle 6s linear infinite, logoPulse 2s ease-in-out infinite;
+            box-shadow: 0 0 80px #ff0040, 0 30px 80px rgba(0,0,0,0.7);
+            transform: rotateX(25deg) rotateY(25deg);
         }
 
         .logo-icon::before {
-            content: '🎮';
+            content: '⚔️';
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: clamp(4rem, 10vw, 7rem);
-            filter: drop-shadow(0 0 25px #fff) brightness(1.2);
+            font-size: clamp(5rem, 12vw, 8rem);
+            filter: drop-shadow(0 0 30px #fff);
         }
 
-        .logo-icon::after {
-            content: '';
-            position: absolute;
-            inset: 15%;
-            background: conic-gradient(from 90deg, transparent 0deg, #fff 90deg, transparent 180deg);
-            border-radius: 50%;
-            animation: joystickSpin 3s linear infinite;
+        @keyframes logoBattle {
+            0% { transform: rotateX(25deg) rotateY(0deg) rotateZ(0deg); }
+            25% { transform: rotateX(25deg) rotateY(90deg) rotateZ(180deg); }
+            50% { transform: rotateX(25deg) rotateY(180deg) rotateZ(360deg); }
+            75% { transform: rotateX(25deg) rotateY(270deg) rotateZ(540deg); }
+            100% { transform: rotateX(25deg) rotateY(360deg) rotateZ(720deg); }
         }
 
-        @keyframes logo3DRotate {
-            0% { transform: rotateX(20deg) rotateY(0deg) rotateZ(0deg); }
-            33% { transform: rotateX(20deg) rotateY(120deg) rotateZ(180deg); }
-            66% { transform: rotateX(20deg) rotateY(240deg) rotateZ(360deg); }
-            100% { transform: rotateX(20deg) rotateY(360deg) rotateZ(0deg); }
-        }
-
-        @keyframes joystickSpin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes logoPulse {
-            0% { box-shadow: 0 0 60px rgba(255,0,64,0.7), 0 20px 60px rgba(0,0,0,0.5); }
-            100% { box-shadow: 0 0 80px rgba(255,0,64,1), 0 30px 80px rgba(0,0,0,0.7); }
-        }
-
-        /* Logo Text */
         .logo-text {
-            font-size: clamp(3.5rem, 12vw, 9rem);
+            font-size: clamp(4rem, 14vw, 10rem);
             font-weight: 900;
-            background: linear-gradient(135deg, #00ff88, #00ccff, #ff00ff, #ffaa00);
-            background-size: 400% 400%;
+            background: linear-gradient(135deg, #ff0040, #00ff88, #00ccff, #ffff00);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 
-                0 0 50px #00ff88,
-                0 0 100px #00ccff,
-                0 0 150px #ff00ff;
-            animation: textRainbow 3s ease infinite;
-            letter-spacing: 8px;
-            text-transform: uppercase;
-            transform: rotateX(-10deg);
+            text-shadow: 0 0 60px #ff0040;
+            animation: battleGlow 2s ease infinite;
+            letter-spacing: 10px;
+            transform: rotateX(-15deg);
         }
 
         .logo-text span {
-            display: block;
-            font-size: 0.65em;
-            letter-spacing: 3px;
-            color: #00ff88;
-            text-shadow: 0 0 30px #00ff88;
-            margin-top: 0.8rem;
-            animation: glitch 2s infinite;
-        }
-
-        @keyframes textRainbow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        @keyframes glitch {
-            0%, 100% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-        }
-
-        /* Subtitle */
-        .subtitle {
-            font-size: clamp(1.5rem, 5vw, 3.2rem);
+            font-size: 0.7em;
             color: #00ff88;
             text-shadow: 0 0 40px #00ff88;
+            margin-top: 1rem;
+            animation: reload 1.5s infinite;
+        }
+
+        @keyframes battleGlow {
+            0%, 100% { filter: brightness(1) drop-shadow(0 0 30px #ff0040); }
+            50% { filter: brightness(1.5) drop-shadow(0 0 60px #00ff88); }
+        }
+
+        @keyframes reload {
+            0%, 90%, 100% { transform: scale(1); }
+            45% { transform: scale(1.1); }
+        }
+
+        .subtitle {
+            font-size: clamp(1.8rem, 6vw, 3.5rem);
+            color: #00ff88;
+            text-shadow: 0 0 50px #00ff88;
             margin-bottom: 5rem;
-            animation: subtitleWave 4s ease-in-out infinite;
+            animation: subtitleShake 0.1s infinite alternate;
             opacity: 0;
-            transform: translateY(40px);
+            transform: translateY(50px);
             font-weight: bold;
-            letter-spacing: 2px;
         }
 
-        @keyframes subtitleWave {
-            0%, 100% { transform: translateY(0) rotateX(0deg); }
-            50% { transform: translateY(-15px) rotateX(5deg); }
+        @keyframes subtitleShake {
+            0% { transform: translateX(-2px); }
+            100% { transform: translateX(2px); }
         }
 
-        /* 3D Buttons */
         .btn-group {
             display: flex;
             gap: 3rem;
             opacity: 0;
-            transform: translateY(40px) rotateX(20deg);
+            transform: translateY(50px) rotateX(25deg);
             flex-wrap: wrap;
             justify-content: center;
-            perspective: 1000px;
         }
 
         .btn {
-            padding: 22px 50px;
-            font-size: 1.5rem;
+            padding: 25px 55px;
+            font-size: 1.6rem;
             font-weight: 900;
-            border: none;
-            border-radius: 70px;
+            border: 3px solid transparent;
+            border-radius: 80px;
             cursor: pointer;
             position: relative;
             transform-style: preserve-3d;
-            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-transform: uppercase;
-            letter-spacing: 5px;
-            text-decoration: none;
-            display: inline-block;
+            letter-spacing: 6px;
+            min-width: 260px;
             overflow: hidden;
-            min-width: 240px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
         }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
-            transition: left 0.8s;
-        }
-
-        .btn:hover::before { left: 100%; }
 
         .login-btn {
-            background: linear-gradient(145deg, #ff0040, #ff4080, #cc0033);
+            background: linear-gradient(145deg, #ff0040, #ff4080);
             color: white;
-            box-shadow: 0 20px 50px rgba(255,0,64,0.6);
-        }
-
-        .login-btn:hover {
-            transform: translateY(-20px) translateZ(50px) rotateX(20deg) rotateY(20deg);
-            box-shadow: 0 40px 80px rgba(255,0,64,0.9);
+            box-shadow: 0 25px 60px rgba(255,0,64,0.7);
         }
 
         .play-btn {
-            background: linear-gradient(145deg, #00ff88, #40ffaa, #00cc66);
+            background: linear-gradient(145deg, #00ff88, #40ffaa);
             color: #000;
-            box-shadow: 0 20px 50px rgba(0,255,136,0.6);
+            box-shadow: 0 25px 60px rgba(0,255,136,0.8);
+            font-size: 1.7rem;
         }
 
-        .play-btn:hover {
-            transform: translateY(-20px) translateZ(60px) rotateX(20deg) rotateY(20deg) scale(1.1);
-            box-shadow: 0 50px 100px rgba(0,255,136,1);
+        .btn:hover {
+            transform: translateY(-25px) translateZ(80px) rotateX(25deg) rotateY(25deg) scale(1.1);
+            box-shadow: 0 50px 120px rgba(0,255,255,0.8);
+            border-color: #00ffff;
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .btn-group { gap: 2rem; }
-            .btn { padding: 20px 40px; font-size: 1.3rem; min-width: 220px; }
-        }
-
-        @media (max-width: 480px) {
             .btn-group { flex-direction: column; gap: 2rem; }
-            .btn { min-width: 280px; padding: 18px 35px; }
+            .btn { padding: 22px 45px; min-width: 280px; }
         }
     </style>
 </head>
 <body>
-    <!-- Firing Bullets + Explosions -->
-    <canvas id="gameCanvas"></canvas>
+    <!-- Battle Characters Canvas -->
+    <canvas id="battleCanvas"></canvas>
 
-    <!-- Main Content -->
     <div class="container">
         <div class="logo-container">
             <div class="logo">
                 <div class="logo-icon"></div>
                 <div class="logo-text">
                     GAMER ZONE
-                    <span>LOCK &amp; LOAD</span>
+                    <span>BATTLE READY</span>
                 </div>
             </div>
         </div>
-        <p class="subtitle">Ready to Dominate the Arena?</p>
+        <p class="subtitle">Choose Your Fighter</p>
         <div class="btn-group">
-            <a href="#login" class="btn login-btn">LOGIN</a>
-            <a href="game.html" class="btn play-btn" target="_blank">PLAY NOW</a>
+            <a href="#login" class="btn login-btn">ARMY SOLDIER</a>
+            <a href="game.html" class="btn play-btn">VS VILLAIN</a>
         </div>
     </div>
 
     <script>
-        // 🔥 FIRING BULLETS + EXPLOSIONS SYSTEM
-        class GamingEngine {
+        // 🔥 VILLAIN vs ARMY MAN BATTLE SYSTEM
+        class BattleSystem {
             constructor() {
-                this.canvas = document.getElementById('gameCanvas');
+                this.canvas = document.getElementById('battleCanvas');
                 this.ctx = this.canvas.getContext('2d');
                 this.resize();
+                this.villain = { x: 150, y: this.canvas.height * 0.6, shootTimer: 0 };
+                this.armyman = { x: this.canvas.width - 250, y: this.canvas.height * 0.6, shootTimer: 0 };
                 this.bullets = [];
                 this.explosions = [];
-                this.lastShot = 0;
                 this.init();
             }
 
             resize() {
                 this.canvas.width = window.innerWidth;
                 this.canvas.height = window.innerHeight;
+                this.armyman.x = this.canvas.width - 250;
             }
 
-            init() {
-                this.animate();
-            }
-
-            createBullet() {
-                const side = Math.floor(Math.random() * 4);
-                let x, y, vx, vy;
+            drawVillain(x, y) {
+                // Villain Body (Red)
+                this.ctx.fillStyle = '#cc0000';
+                this.ctx.shadowColor = '#ff4444';
+                this.ctx.shadowBlur = 20;
+                this.ctx.fillRect(x - 25, y - 80, 50, 80);
                 
-                switch(side) {
-                    case 0: // Top
-                        x = Math.random() * this.canvas.width;
-                        y = 0;
-                        vx = (Math.random() - 0.5) * 4;
-                        vy = Math.random() * 3 + 4;
-                        break;
-                    case 1: // Right
-                        x = this.canvas.width;
-                        y = Math.random() * this.canvas.height;
-                        vx = -(Math.random() * 3 + 4);
-                        vy = (Math.random() - 0.5) * 4;
-                        break;
-                    case 2: // Bottom
-                        x = Math.random() * this.canvas.width;
-                        y = this.canvas.height;
-                        vx = (Math.random() - 0.5) * 4;
-                        vy = -(Math.random() * 3 + 4);
-                        break;
-                    case 3: // Left
-                        x = 0;
-                        y = Math.random() * this.canvas.height;
-                        vx = Math.random() * 3 + 4;
-                        vy = (Math.random() - 0.5) * 4;
-                        break;
-                }
-
-                this.bullets.push({ x, y, vx, vy, life: 1 });
+                // Villain Head
+                this.ctx.fillStyle = '#ff2222';
+                this.ctx.beginPath();
+                this.ctx.arc(x, y - 100, 25, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Eyes (glowing)
+                this.ctx.fillStyle = '#ffff00';
+                this.ctx.beginPath();
+                this.ctx.arc(x - 10, y - 105, 4, 0, Math.PI * 2);
+                this.ctx.arc(x + 10, y - 105, 4, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Gun
+                this.ctx.fillStyle = '#666';
+                this.ctx.fillRect(x + 25, y - 60, 40, 8);
+                this.ctx.fillStyle = '#ffaa00';
+                this.ctx.fillRect(x + 62, y - 64, 15, 4); // Muzzle flash
             }
 
-            createExplosion(x, y) {
-                const exp = document.createElement('div');
-                exp.className = 'explosion';
-                exp.style.left = x + 'px';
-                exp.style.top = y + 'px';
-                exp.style.width = '20px';
-                exp.style.height = '20px';
-                document.body.appendChild(exp);
-                setTimeout(() => exp.remove(), 800);
+            drawArmyMan(x, y) {
+                // Army Body (Green)
+                this.ctx.fillStyle = '#006600';
+                this.ctx.shadowColor = '#00ff88';
+                this.ctx.shadowBlur = 25;
+                this.ctx.fillRect(x - 30, y - 85, 60, 85);
+                
+                // Helmet
+                this.ctx.fillStyle = '#444';
+                this.ctx.beginPath();
+                this.ctx.arc(x, y - 110, 28, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Eyes
+                this.ctx.fillStyle = '#00ff88';
+                this.ctx.beginPath();
+                this.ctx.arc(x - 8, y - 112, 3, 0, Math.PI * 2);
+                this.ctx.arc(x + 8, y - 112, 3, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Gun
+                this.ctx.fillStyle = '#333';
+                this.ctx.fillRect(x - 70, y - 55, 45, 10);
+                this.ctx.fillStyle = '#00ff44';
+                this.ctx.fillRect(x - 85, y - 58, 12, 4); // Muzzle flash
+            }
+
+            createBullet(fromX, fromY, toX, toY, color) {
+                const dx = toX - fromX;
+                const dy = toY - fromY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                this.bullets.push({
+                    x: fromX,
+                    y: fromY,
+                    vx: (dx / dist) * 12,
+                    vy: (dy / dist) * 12,
+                    life: 1,
+                    color: color,
+                    size: 4
+                });
             }
 
             update() {
                 const now = Date.now();
                 
-                // Auto-fire bullets
-                if (now - this.lastShot > 80 + Math.random() * 200) {
-                    this.createBullet();
-                    this.lastShot = now;
+                // Villain shoots at Army Man
+                if (now - this.villain.shootTimer > 1200 + Math.random() * 800) {
+                    this.createBullet(
+                        this.villain.x + 65, this.villain.y - 62,
+                        this.armyman.x, this.armyman.y - 20,
+                        '#ff4444'
+                    );
+                    this.villain.shootTimer = now;
+                }
+                
+                // Army Man shoots at Villain
+                if (now - this.armyman.shootTimer > 1000 + Math.random() * 600) {
+                    this.createBullet(
+                        this.armyman.x - 83, this.armyman.y - 58,
+                        this.villain.x, this.villain.y - 30,
+                        '#00ff88'
+                    );
+                    this.armyman.shootTimer = now;
                 }
 
                 // Update bullets
@@ -382,28 +325,28 @@
                     const b = this.bullets[i];
                     b.x += b.vx;
                     b.y += b.vy;
-                    b.life -= 0.02;
+                    b.life -= 0.03;
 
-                    // Bullet trail
-                    this.ctx.strokeStyle = `rgba(255, ${Math.floor(100 + b.life * 155)}, 0, ${b.life})`;
-                    this.ctx.lineWidth = 3;
+                    // Draw bullet trail
+                    this.ctx.strokeStyle = `rgba(${b.color === '#ff4444' ? '255,68,68' : '0,255,136'}, ${b.life})`;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.lineCap = 'round';
                     this.ctx.beginPath();
                     this.ctx.moveTo(b.x, b.y);
-                    this.ctx.lineTo(b.x - b.vx * 5, b.y - b.vy * 5);
+                    this.ctx.lineTo(b.x - b.vx * 3, b.y - b.vy * 3);
                     this.ctx.stroke();
 
-                    // Bullet head
-                    this.ctx.fillStyle = `rgba(255, ${Math.floor(200 + b.life * 55)}, 0, ${b.life * 2})`;
-                    this.ctx.shadowColor = '#ffaa00';
-                    this.ctx.shadowBlur = 20;
+                    // Bullet glow
+                    this.ctx.shadowColor = b.color;
+                    this.ctx.shadowBlur = 25;
+                    this.ctx.fillStyle = b.color;
                     this.ctx.beginPath();
-                    this.ctx.arc(b.x, b.y, 4, 0, Math.PI * 2);
+                    this.ctx.arc(b.x, b.y, b.size, 0, Math.PI * 2);
                     this.ctx.fill();
 
-                    // Remove dead bullets
-                    if (b.life <= 0 || b.x < -50 || b.x > this.canvas.width + 50 || 
-                        b.y < -50 || b.y > this.canvas.height + 50) {
-                        this.createExplosion(b.x, b.y);
+                    // Remove bullets
+                    if (b.life <= 0 || b.x < 0 || b.x > this.canvas.width || 
+                        b.y < 0 || b.y > this.canvas.height) {
                         this.bullets.splice(i, 1);
                     }
                 }
@@ -411,33 +354,39 @@
 
             animate() {
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Draw characters
+                this.drawVillain(this.villain.x, this.villain.y);
+                this.drawArmyMan(this.armyman.x, this.armyman.y);
+                
+                // Update battle
                 this.update();
+                
                 requestAnimationFrame(() => this.animate());
             }
         }
 
-        // 3D Entrance Animation
-        function entrance3D() {
+        // 3D Entrance
+        function entranceBattle() {
             const els = ['.logo-container', '.subtitle', '.btn-group'];
             els.forEach((sel, i) => {
                 setTimeout(() => {
-                    const el = document.querySelector(sel);
-                    el.style.transition = `all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)`;
-                    el.style.opacity = '1';
-                    el.style.transform = 'translateY(0) rotateX(0deg)';
-                }, i * 600 + 400);
+                    document.querySelector(sel).style.transition = 'all 1.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                    document.querySelector(sel).style.opacity = '1';
+                    document.querySelector(sel).style.transform = 'translateY(0) rotateX(0deg)';
+                }, i * 700 + 500);
             });
         }
 
-        // Initialize Gaming Engine
-        let gameEngine;
+        // Init Battle
+        let battle;
         window.addEventListener('load', () => {
-            gameEngine = new GamingEngine();
-            entrance3D();
+            battle = new BattleSystem();
+            entranceBattle();
         });
 
         window.addEventListener('resize', () => {
-            if (gameEngine) gameEngine.resize();
+            if (battle) battle.resize();
         });
     </script>
 </body>
