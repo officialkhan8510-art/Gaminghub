@@ -1,177 +1,409 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GAMER ZONE</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProGamer Hub - Epic Gaming Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:sans-serif;
-}
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(45deg, #0a0a0a, #1a0033, #000);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
 
-body{
-  height:100vh;
-  overflow:hidden;
-  color:white;
-}
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-/* 🔥 BACKGROUND IMAGE */
-.bg{
-  position:absolute;
-  width:100%;
-  height:100%;
-  background:url("bg.jpg") center/cover no-repeat;
-  z-index:-2;
-}
+        /* Floating Particles */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
 
-/* DARK OVERLAY */
-.overlay{
-  position:absolute;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.5);
-  z-index:-1;
-}
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, #00ff88, #0088ff);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 6s infinite linear;
+        }
 
-/* CENTER CONTENT */
-.container{
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  padding:20px;
-}
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(1);
+                opacity: 0;
+            }
+        }
 
-/* 🔥 TITLE */
-.title{
-  font-size:40px;
-  font-weight:bold;
-  color:#ff7a18;
-  text-shadow:0 0 10px #ff7a18,0 0 20px #ff7a18;
-  margin-bottom:20px;
-}
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #fff;
+        }
 
-/* TEXT */
-.info{
-  font-size:18px;
-  color:#ddd;
-  margin-bottom:30px;
-  line-height:1.5;
-}
+        /* 3D Logo */
+        .logo {
+            font-size: clamp(3rem, 8vw, 8rem);
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00, #ff6600);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 
+                0 0 20px #ff00ff,
+                0 0 40px #00ffff,
+                0 0 60px #ffff00;
+            animation: logoGlow 2s ease-in-out infinite alternate,
+                       logoShake 0.1s ease-in-out infinite alternate;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            margin-bottom: 2rem;
+        }
 
-/* 🔥 BUTTON BASE */
-.btn{
-  width:260px;
-  padding:15px;
-  margin:10px;
-  font-size:16px;
-  border:none;
-  border-radius:12px;
-  cursor:pointer;
-  transition:0.2s;
-}
+        @keyframes logoGlow {
+            from { filter: hue-rotate(0deg) brightness(1); }
+            to { filter: hue-rotate(360deg) brightness(1.2); }
+        }
 
-/* RED BUTTON */
-.start{
-  background:linear-gradient(45deg,#ff416c,#ff4b2b);
-  box-shadow:0 0 15px #ff416c;
-  color:white;
-}
+        @keyframes logoShake {
+            0% { transform: rotateX(2deg) rotateY(2deg); }
+            100% { transform: rotateX(-2deg) rotateY(-2deg); }
+        }
 
-/* BLUE BUTTON */
-.join{
-  background:transparent;
-  border:2px solid #22d3ee;
-  color:#22d3ee;
-  box-shadow:0 0 10px #22d3ee;
-}
+        /* Subtitle */
+        .subtitle {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            color: #00ff88;
+            text-shadow: 0 0 20px #00ff88;
+            margin-bottom: 4rem;
+            animation: pulse 2s infinite;
+        }
 
-/* CLICK */
-.btn:active{
-  transform:scale(0.9);
-}
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+        }
 
-/* 🔥 FLOAT PARTICLES */
-.particle{
-  position:absolute;
-  width:3px;
-  height:3px;
-  background:white;
-  opacity:0.4;
-  border-radius:50%;
-  animation:float linear infinite;
-}
+        /* 3D Buttons */
+        .btn-group {
+            display: flex;
+            gap: 2rem;
+            perspective: 1000px;
+        }
 
-@keyframes float{
-  from{ transform:translateY(100vh);}
-  to{ transform:translateY(-10vh);}
-}
-</style>
+        .btn {
+            padding: 1.2rem 3rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        /* Login Button */
+        .login-btn {
+            background: linear-gradient(145deg, #ff0040, #ff4080);
+            color: white;
+            box-shadow: 
+                0 10px 30px rgba(255,0,64,0.4),
+                inset 0 5px 10px rgba(255,255,255,0.2);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-10px) rotateX(15deg) rotateY(15deg);
+            box-shadow: 
+                0 20px 40px rgba(255,0,64,0.6),
+                inset 0 5px 10px rgba(255,255,255,0.3);
+        }
+
+        /* Start Button */
+        .start-btn {
+            background: linear-gradient(145deg, #00ff88, #40ffaa);
+            color: #000;
+            box-shadow: 
+                0 10px 30px rgba(0,255,136,0.4),
+                inset 0 5px 10px rgba(255,255,255,0.3);
+            font-weight: 900;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-10px) rotateX(15deg) rotateY(15deg) scale(1.05);
+            box-shadow: 
+                0 25px 50px rgba(0,255,136,0.7),
+                inset 0 5px 10px rgba(255,255,255,0.4);
+        }
+
+        /* Floating Elements */
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .cube {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            transform-style: preserve-3d;
+            animation: rotate 10s infinite linear;
+        }
+
+        .cube-face {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, rgba(255,0,255,0.3), rgba(0,255,255,0.3));
+            border: 2px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .cube-face:nth-child(1) { transform: rotateY(0deg) translateZ(30px); }
+        .cube-face:nth-child(2) { transform: rotateY(90deg) translateZ(30px); }
+        .cube-face:nth-child(3) { transform: rotateY(180deg) translateZ(30px); }
+        .cube-face:nth-child(4) { transform: rotateY(-90deg) translateZ(30px); }
+        .cube-face:nth-child(5) { transform: rotateX(90deg) translateZ(30px); }
+        .cube-face:nth-child(6) { transform: rotateX(-90deg) translateZ(30px); }
+
+        @keyframes rotate {
+            0% { transform: rotateX(0deg) rotateY(0deg); }
+            100% { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .btn-group {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .btn {
+                padding: 1rem 2rem;
+            }
+        }
+
+        /* Click Effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.6);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <!-- Floating Particles -->
+    <div class="particles" id="particles"></div>
 
-<div class="bg"></div>
-<div class="overlay"></div>
+    <!-- Floating 3D Cubes -->
+    <div class="floating-elements">
+        <div class="cube" style="top: 20%; left: 10%; animation-delay: 0s;"></div>
+        <div class="cube" style="top: 60%; right: 15%; animation-delay: -3s;"></div>
+        <div class="cube" style="bottom: 30%; left: 20%; animation-delay: -6s;"></div>
+    </div>
 
-<div class="container">
+    <!-- Main Content -->
+    <div class="container">
+        <h1 class="logo">PROGAMER</h1>
+        <p class="subtitle">Welcome to the Ultimate Gaming Universe</p>
+        <div class="btn-group">
+            <button class="btn login-btn" id="loginBtn">
+                LOGIN
+            </button>
+            <button class="btn start-btn" id="startBtn">
+                START GAMING
+            </button>
+        </div>
+    </div>
 
-  <div class="title">GAMER ZONE</div>
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.width = particle.style.height = (Math.random() * 4 + 1) + 'px';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                particle.style.animationDelay = Math.random() * 2 + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
 
-  <div class="info">
-    👥 50K+ Gamers • 24/7 Tournaments <br>
-    💰 $100K Prize Pool • Become Legendary
-  </div>
+        // Create 3D cubes
+        function createCubes() {
+            const cubes = document.querySelectorAll('.cube');
+            cubes.forEach(cube => {
+                for (let i = 0; i < 6; i++) {
+                    const face = document.createElement('div');
+                    face.className = 'cube-face';
+                    cube.appendChild(face);
+                }
+            });
+        }
 
-  <button class="btn start" onclick="startGame()">START BATTLE</button>
-  <button class="btn join">JOIN TOURNAMENT</button>
+        // Ripple effect on buttons
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const circle = document.createElement('span');
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            const radius = diameter / 2;
 
-</div>
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${event.clientX - button.offsetLeft - radius}px`;
+            circle.style.top = `${event.clientY - button.offsetTop - radius}px`;
+            circle.classList.add('ripple');
 
-<script>
+            const ripple = button.getElementsByClassName('ripple')[0];
+            if (ripple) {
+                ripple.remove();
+            }
 
-/* 🔥 BUTTON SOUND */
-const clickSound=new Audio("click.mp3");
+            button.appendChild(circle);
+        }
 
-document.querySelectorAll(".btn").forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    clickSound.currentTime=0;
-    clickSound.play();
-  });
-});
+        // Button interactions
+        document.getElementById('loginBtn').addEventListener('click', function(e) {
+            createRipple(e);
+            setTimeout(() => {
+                alert('🔐 Login Portal Opening...\n\nComing Soon!');
+            }, 300);
+        });
 
-/* 🔥 NAVIGATION */
-function startGame(){
-  setTimeout(()=>{
-    window.location.href="game.html";
-  },200);
-}
+        document.getElementById('startBtn').addEventListener('click', function(e) {
+            createRipple(e);
+            document.body.style.background = 'linear-gradient(45deg, #00ff88, #0088ff, #ff00ff)';
+            setTimeout(() => {
+                alert('🚀 Gaming Dashboard Loading...\n\nWelcome to ProGamer Hub!');
+            }, 300);
+        });
 
-/* 🔥 PARTICLES */
-for(let i=0;i<40;i++){
-  let p=document.createElement("div");
-  p.className="particle";
-  p.style.left=Math.random()*100+"%";
-  p.style.animationDuration=(5+Math.random()*5)+"s";
-  document.body.appendChild(p);
-}
+        // Mouse trail effect
+        document.addEventListener('mousemove', (e) => {
+            const trail = document.createElement('div');
+            trail.style.position = 'fixed';
+            trail.style.left = e.clientX + 'px';
+            trail.style.top = e.clientY + 'px';
+            trail.style.width = '4px';
+            trail.style.height = '4px';
+            trail.style.background = 'radial-gradient(circle, #00ffff, transparent)';
+            trail.style.borderRadius = '50%';
+            trail.style.pointerEvents = 'none';
+            trail.style.zIndex = '1000';
+            trail.style.animation = 'float 1s ease-out forwards';
+            document.body.appendChild(trail);
 
-/* 🔥 LIGHT PARALLAX (3D FEEL) */
-document.addEventListener("mousemove",(e)=>{
-  let x=e.pageX/50;
-  let y=e.pageY/50;
+            setTimeout(() => trail.remove(), 1000);
+        });
 
-  document.querySelector(".bg").style.transform=
-    `scale(1.05) translate(-${x}px,-${y}px)`;
-});
+        // Initialize
+        window.addEventListener('load', () => {
+            createParticles();
+            createCubes();
+            
+            // Entrance animation
+            document.querySelector('.logo').style.opacity = '0';
+            document.querySelector('.logo').style.transform = 'translateY(50px)';
+            document.querySelector('.subtitle').style.opacity = '0';
+            document.querySelector('.subtitle').style.transform = 'translateY(30px)';
+            document.querySelector('.btn-group').style.opacity = '0';
+            document.querySelector('.btn-group').style.transform = 'translateY(30px)';
 
-</script>
+            setTimeout(() => {
+                document.querySelector('.logo').style.transition = 'all 1s ease';
+                document.querySelector('.logo').style.opacity = '1';
+                document.querySelector('.logo').style.transform = 'translateY(0)';
+                
+                setTimeout(() => {
+                    document.querySelector('.subtitle').style.transition = 'all 0.8s ease';
+                    document.querySelector('.subtitle').style.opacity = '1';
+                    document.querySelector('.subtitle').style.transform = 'translateY(0)';
+                    
+                    setTimeout(() => {
+                        document.querySelector('.btn-group').style.transition = 'all 0.8s ease';
+                        document.querySelector('.btn-group').style.opacity = '1';
+                        document.querySelector('.btn-group').style.transform = 'translateY(0)';
+                    }, 300);
+                }, 500);
+            }, 500);
+        });
 
+        // Keyboard Easter Egg
+        let konamiCode = [];
+        const konami = [38,38,40,40,37,39,37,39,66,65];
+        
+        document.addEventListener('keydown', (e) => {
+            konamiCode.push(e.keyCode);
+            if (konamiCode.length > konami.length) {
+                konamiCode.shift();
+            }
+            if (konamiCode.join(',') === konami.join(',')) {
+                document.body.style.background = 'linear-gradient(45deg, #ff0000, #ffff00, #00ff00, #0000ff)';
+                document.querySelector('.logo').textContent = 'HACKER MODE';
+                alert('🎮 KONAMI CODE ACTIVATED! HACKER MODE ON! 🎮');
+                konamiCode = [];
+            }
+        });
+    </script>
 </body>
 </html>
