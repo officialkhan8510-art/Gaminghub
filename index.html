@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gamer Zone - Battle Arena</title>
+    <title>GAMER ZONE - Ultimate Gaming Hub</title>
     <style>
         * {
             margin: 0;
@@ -12,29 +12,49 @@
         }
 
         html, body {
-            height: 100%;
+            height: 100vh;
             overflow: hidden;
+            font-family: 'Courier New', monospace;
         }
 
         body {
-            font-family: 'Courier New', monospace;
-            background: linear-gradient(135deg, #1a0a23 0%, #2a1a43 50%, #0a0a23 100%);
+            background: linear-gradient(-45deg, #0c0c0c, #1a0033, #000428, #1a0a23);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             position: relative;
-            perspective: 1500px;
+            color: #fff;
         }
 
-        /* Battle Canvas */
-        #battleCanvas {
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Stars Background */
+        .stars {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1;
             pointer-events: none;
+            z-index: 1;
         }
 
-        /* Main Container */
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Main Content */
         .container {
             position: relative;
             z-index: 10;
@@ -44,350 +64,275 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            color: #fff;
-            padding: 20px;
+            padding: 2rem;
         }
 
-        /* 3D Logo */
-        .logo-container {
-            perspective: 1200px;
-            margin-bottom: 2rem;
-            opacity: 0;
-            transform: translateY(60px) rotateX(30deg);
-        }
-
+        /* Gaming Logo */
         .logo {
-            transform-style: preserve-3d;
-        }
-
-        .logo-icon {
-            width: clamp(160px, 30vw, 280px);
-            height: clamp(160px, 30vw, 280px);
-            background: conic-gradient(#ff0040, #ffaa00, #ffff00, #00ff88, #00ccff);
-            border-radius: 50%;
-            margin-bottom: 1.5rem;
-            animation: logoBattle 6s linear infinite, logoPulse 2s ease-in-out infinite;
-            box-shadow: 0 0 80px #ff0040, 0 30px 80px rgba(0,0,0,0.7);
-            transform: rotateX(25deg) rotateY(25deg);
-        }
-
-        .logo-icon::before {
-            content: '⚔️';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: clamp(5rem, 12vw, 8rem);
-            filter: drop-shadow(0 0 30px #fff);
-        }
-
-        @keyframes logoBattle {
-            0% { transform: rotateX(25deg) rotateY(0deg) rotateZ(0deg); }
-            25% { transform: rotateX(25deg) rotateY(90deg) rotateZ(180deg); }
-            50% { transform: rotateX(25deg) rotateY(180deg) rotateZ(360deg); }
-            75% { transform: rotateX(25deg) rotateY(270deg) rotateZ(540deg); }
-            100% { transform: rotateX(25deg) rotateY(360deg) rotateZ(720deg); }
-        }
-
-        .logo-text {
-            font-size: clamp(4rem, 14vw, 10rem);
+            font-size: clamp(4rem, 15vw, 12rem);
             font-weight: 900;
-            background: linear-gradient(135deg, #ff0040, #00ff88, #00ccff, #ffff00);
+            background: linear-gradient(45deg, #ff0066, #00ff88, #00ccff, #ffff00, #ff6600);
+            background-size: 400% 400%;
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 60px #ff0040;
-            animation: battleGlow 2s ease infinite;
-            letter-spacing: 10px;
-            transform: rotateX(-15deg);
+            margin-bottom: 1.5rem;
+            animation: logoRainbow 4s ease infinite, logoFloat 6s ease-in-out infinite;
+            text-shadow: 0 0 60px rgba(255,255,255,0.8);
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(100px);
         }
 
-        .logo-text span {
-            font-size: 0.7em;
+        @keyframes logoRainbow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px) rotateX(0deg); }
+            50% { transform: translateY(-30px) rotateX(10deg); }
+        }
+
+        /* Tagline */
+        .tagline {
+            font-size: clamp(1.5rem, 5vw, 3rem);
             color: #00ff88;
+            margin-bottom: 4rem;
             text-shadow: 0 0 40px #00ff88;
-            margin-top: 1rem;
-            animation: reload 1.5s infinite;
-        }
-
-        @keyframes battleGlow {
-            0%, 100% { filter: brightness(1) drop-shadow(0 0 30px #ff0040); }
-            50% { filter: brightness(1.5) drop-shadow(0 0 60px #00ff88); }
-        }
-
-        @keyframes reload {
-            0%, 90%, 100% { transform: scale(1); }
-            45% { transform: scale(1.1); }
-        }
-
-        .subtitle {
-            font-size: clamp(1.8rem, 6vw, 3.5rem);
-            color: #00ff88;
-            text-shadow: 0 0 50px #00ff88;
-            margin-bottom: 5rem;
-            animation: subtitleShake 0.1s infinite alternate;
+            animation: pulseGlow 2s infinite;
             opacity: 0;
             transform: translateY(50px);
-            font-weight: bold;
+            letter-spacing: 3px;
         }
 
-        @keyframes subtitleShake {
-            0% { transform: translateX(-2px); }
-            100% { transform: translateX(2px); }
+        @keyframes pulseGlow {
+            0%, 100% { 
+                opacity: 1; 
+                text-shadow: 0 0 20px #00ff88;
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 0.8; 
+                text-shadow: 0 0 50px #00ff88;
+                transform: scale(1.05);
+            }
         }
 
-        .btn-group {
+        /* Buttons */
+        .buttons {
             display: flex;
             gap: 3rem;
             opacity: 0;
-            transform: translateY(50px) rotateX(25deg);
+            transform: translateY(50px);
             flex-wrap: wrap;
             justify-content: center;
         }
 
         .btn {
-            padding: 25px 55px;
-            font-size: 1.6rem;
-            font-weight: 900;
-            border: 3px solid transparent;
-            border-radius: 80px;
+            padding: 20px 50px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
             cursor: pointer;
             position: relative;
-            transform-style: preserve-3d;
-            transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            text-transform: uppercase;
-            letter-spacing: 6px;
-            min-width: 260px;
             overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-family: inherit;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            min-width: 220px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .login-btn {
-            background: linear-gradient(145deg, #ff0040, #ff4080);
+            background: linear-gradient(145deg, #ff0066, #ff4080);
             color: white;
-            box-shadow: 0 25px 60px rgba(255,0,64,0.7);
         }
 
         .play-btn {
             background: linear-gradient(145deg, #00ff88, #40ffaa);
             color: #000;
-            box-shadow: 0 25px 60px rgba(0,255,136,0.8);
-            font-size: 1.7rem;
+            font-weight: 900;
+            font-size: 1.5rem;
         }
 
         .btn:hover {
-            transform: translateY(-25px) translateZ(80px) rotateX(25deg) rotateY(25deg) scale(1.1);
-            box-shadow: 0 50px 120px rgba(0,255,255,0.8);
-            border-color: #00ffff;
+            transform: translateY(-15px) scale(1.05);
+            box-shadow: 0 25px 50px rgba(0,255,255,0.6);
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .btn-group { flex-direction: column; gap: 2rem; }
-            .btn { padding: 22px 45px; min-width: 280px; }
+            .buttons {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            .btn {
+                padding: 18px 40px;
+                min-width: 250px;
+            }
+        }
+
+        /* Neon Grid */
+        .grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0,255,136,0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,255,136,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 2;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
         }
     </style>
 </head>
 <body>
-    <!-- Battle Characters Canvas -->
-    <canvas id="battleCanvas"></canvas>
+    <!-- Background Elements -->
+    <div class="stars" id="stars"></div>
+    <div class="grid"></div>
 
+    <!-- Main Content -->
     <div class="container">
-        <div class="logo-container">
-            <div class="logo">
-                <div class="logo-icon"></div>
-                <div class="logo-text">
-                    GAMER ZONE
-                    <span>BATTLE READY</span>
-                </div>
-            </div>
-        </div>
-        <p class="subtitle">Choose Your Fighter</p>
-        <div class="btn-group">
-            <a href="#login" class="btn login-btn">ARMY SOLDIER</a>
-            <a href="game.html" class="btn play-btn">VS VILLAIN</a>
+        <h1 class="logo">GAMER ZONE</h1>
+        <p class="tagline">ENTER THE ULTIMATE GAMING UNIVERSE</p>
+        <div class="buttons">
+            <button class="btn login-btn" onclick="loginAction()">LOGIN</button>
+            <a href="game.html" class="btn play-btn" target="_blank">PLAY NOW</a>
         </div>
     </div>
 
     <script>
-        // 🔥 VILLAIN vs ARMY MAN BATTLE SYSTEM
-        class BattleSystem {
-            constructor() {
-                this.canvas = document.getElementById('battleCanvas');
-                this.ctx = this.canvas.getContext('2d');
-                this.resize();
-                this.villain = { x: 150, y: this.canvas.height * 0.6, shootTimer: 0 };
-                this.armyman = { x: this.canvas.width - 250, y: this.canvas.height * 0.6, shootTimer: 0 };
-                this.bullets = [];
-                this.explosions = [];
-                this.init();
-            }
-
-            resize() {
-                this.canvas.width = window.innerWidth;
-                this.canvas.height = window.innerHeight;
-                this.armyman.x = this.canvas.width - 250;
-            }
-
-            drawVillain(x, y) {
-                // Villain Body (Red)
-                this.ctx.fillStyle = '#cc0000';
-                this.ctx.shadowColor = '#ff4444';
-                this.ctx.shadowBlur = 20;
-                this.ctx.fillRect(x - 25, y - 80, 50, 80);
-                
-                // Villain Head
-                this.ctx.fillStyle = '#ff2222';
-                this.ctx.beginPath();
-                this.ctx.arc(x, y - 100, 25, 0, Math.PI * 2);
-                this.ctx.fill();
-                
-                // Eyes (glowing)
-                this.ctx.fillStyle = '#ffff00';
-                this.ctx.beginPath();
-                this.ctx.arc(x - 10, y - 105, 4, 0, Math.PI * 2);
-                this.ctx.arc(x + 10, y - 105, 4, 0, Math.PI * 2);
-                this.ctx.fill();
-                
-                // Gun
-                this.ctx.fillStyle = '#666';
-                this.ctx.fillRect(x + 25, y - 60, 40, 8);
-                this.ctx.fillStyle = '#ffaa00';
-                this.ctx.fillRect(x + 62, y - 64, 15, 4); // Muzzle flash
-            }
-
-            drawArmyMan(x, y) {
-                // Army Body (Green)
-                this.ctx.fillStyle = '#006600';
-                this.ctx.shadowColor = '#00ff88';
-                this.ctx.shadowBlur = 25;
-                this.ctx.fillRect(x - 30, y - 85, 60, 85);
-                
-                // Helmet
-                this.ctx.fillStyle = '#444';
-                this.ctx.beginPath();
-                this.ctx.arc(x, y - 110, 28, 0, Math.PI * 2);
-                this.ctx.fill();
-                
-                // Eyes
-                this.ctx.fillStyle = '#00ff88';
-                this.ctx.beginPath();
-                this.ctx.arc(x - 8, y - 112, 3, 0, Math.PI * 2);
-                this.ctx.arc(x + 8, y - 112, 3, 0, Math.PI * 2);
-                this.ctx.fill();
-                
-                // Gun
-                this.ctx.fillStyle = '#333';
-                this.ctx.fillRect(x - 70, y - 55, 45, 10);
-                this.ctx.fillStyle = '#00ff44';
-                this.ctx.fillRect(x - 85, y - 58, 12, 4); // Muzzle flash
-            }
-
-            createBullet(fromX, fromY, toX, toY, color) {
-                const dx = toX - fromX;
-                const dy = toY - fromY;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                this.bullets.push({
-                    x: fromX,
-                    y: fromY,
-                    vx: (dx / dist) * 12,
-                    vy: (dy / dist) * 12,
-                    life: 1,
-                    color: color,
-                    size: 4
-                });
-            }
-
-            update() {
-                const now = Date.now();
-                
-                // Villain shoots at Army Man
-                if (now - this.villain.shootTimer > 1200 + Math.random() * 800) {
-                    this.createBullet(
-                        this.villain.x + 65, this.villain.y - 62,
-                        this.armyman.x, this.armyman.y - 20,
-                        '#ff4444'
-                    );
-                    this.villain.shootTimer = now;
-                }
-                
-                // Army Man shoots at Villain
-                if (now - this.armyman.shootTimer > 1000 + Math.random() * 600) {
-                    this.createBullet(
-                        this.armyman.x - 83, this.armyman.y - 58,
-                        this.villain.x, this.villain.y - 30,
-                        '#00ff88'
-                    );
-                    this.armyman.shootTimer = now;
-                }
-
-                // Update bullets
-                for (let i = this.bullets.length - 1; i >= 0; i--) {
-                    const b = this.bullets[i];
-                    b.x += b.vx;
-                    b.y += b.vy;
-                    b.life -= 0.03;
-
-                    // Draw bullet trail
-                    this.ctx.strokeStyle = `rgba(${b.color === '#ff4444' ? '255,68,68' : '0,255,136'}, ${b.life})`;
-                    this.ctx.lineWidth = 2;
-                    this.ctx.lineCap = 'round';
-                    this.ctx.beginPath();
-                    this.ctx.moveTo(b.x, b.y);
-                    this.ctx.lineTo(b.x - b.vx * 3, b.y - b.vy * 3);
-                    this.ctx.stroke();
-
-                    // Bullet glow
-                    this.ctx.shadowColor = b.color;
-                    this.ctx.shadowBlur = 25;
-                    this.ctx.fillStyle = b.color;
-                    this.ctx.beginPath();
-                    this.ctx.arc(b.x, b.y, b.size, 0, Math.PI * 2);
-                    this.ctx.fill();
-
-                    // Remove bullets
-                    if (b.life <= 0 || b.x < 0 || b.x > this.canvas.width || 
-                        b.y < 0 || b.y > this.canvas.height) {
-                        this.bullets.splice(i, 1);
-                    }
-                }
-            }
-
-            animate() {
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                
-                // Draw characters
-                this.drawVillain(this.villain.x, this.villain.y);
-                this.drawArmyMan(this.armyman.x, this.armyman.y);
-                
-                // Update battle
-                this.update();
-                
-                requestAnimationFrame(() => this.animate());
+        // Create Stars
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 100;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = star.style.height = (Math.random() * 3 + 1) + 'px';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                starsContainer.appendChild(star);
             }
         }
 
-        // 3D Entrance
-        function entranceBattle() {
-            const els = ['.logo-container', '.subtitle', '.btn-group'];
-            els.forEach((sel, i) => {
+        // Entrance Animation
+        function entranceAnimation() {
+            const timeline = [
+                { el: '.logo', delay: 500 },
+                { el: '.tagline', delay: 1500 },
+                { el: '.buttons', delay: 2500 }
+            ];
+
+            timeline.forEach(({ el, delay }) => {
                 setTimeout(() => {
-                    document.querySelector(sel).style.transition = 'all 1.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-                    document.querySelector(sel).style.opacity = '1';
-                    document.querySelector(sel).style.transform = 'translateY(0) rotateX(0deg)';
-                }, i * 700 + 500);
+                    const element = document.querySelector(el);
+                    element.style.transition = 'all 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }, delay);
             });
         }
 
-        // Init Battle
-        let battle;
-        window.addEventListener('load', () => {
-            battle = new BattleSystem();
-            entranceBattle();
+        // Button Effects
+        function loginAction() {
+            const btn = event.target;
+            btn.style.transform = 'scale(0.95)';
+            
+            setTimeout(() => {
+                btn.style.transform = '';
+                alert('🔐 Login Portal\n\nPro Gamer Account Required!\nComing Soon...');
+            }, 150);
+        }
+
+        // Mouse Trail Effect
+        let trail = [];
+        document.addEventListener('mousemove', (e) => {
+            trail.push({ x: e.clientX, y: e.clientY });
+            if (trail.length > 8) trail.shift();
         });
 
-        window.addEventListener('resize', () => {
-            if (battle) battle.resize();
+        function drawTrail() {
+            trail.forEach((point, index) => {
+                const size = 6 - index * 0.8;
+                const div = document.createElement('div');
+                div.style.position = 'fixed';
+                div.style.left = point.x + 'px';
+                div.style.top = point.y + 'px';
+                div.style.width = size + 'px';
+                div.style.height = size + 'px';
+                div.style.background = 'radial-gradient(circle, #00ffff, transparent)';
+                div.style.borderRadius = '50%';
+                div.style.pointerEvents = 'none';
+                div.style.zIndex = '100';
+                div.style.opacity = (1 - index * 0.15);
+                document.body.appendChild(div);
+                
+                setTimeout(() => div.remove(), 600);
+            });
+        }
+
+        // Keyboard Easter Egg (Konami Code)
+        let konami = [];
+        const konamiCode = [38,38,40,40,37,39,37,39,66,65];
+        
+        document.addEventListener('keydown', (e) => {
+            konami.push(e.keyCode);
+            konami = konami.slice(-10);
+            
+            if (konami.join(',') === konamiCode.join(',')) {
+                document.body.style.background = 'linear-gradient(45deg, #ff0000, #ffff00, #00ff00)';
+                document.querySelector('.logo').innerHTML = 'HACKER MODE <span>ACTIVATED</span>';
+                alert('🎮 KONAMI CODE UNLOCKED!\n\nHACKER MODE ACTIVATED!\n\nSecret games unlocked!');
+            }
         });
+
+        // Initialize
+        window.addEventListener('load', () => {
+            createStars();
+            entranceAnimation();
+            
+            // Trail loop
+            setInterval(drawTrail, 60);
+        });
+
+        // Smooth scroll prevention
+        window.addEventListener('scroll', () => {
+            window.scrollTo(0, 0);
+        }, true);
     </script>
 </body>
 </html>
