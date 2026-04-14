@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gamer Zone - Ultimate Gaming Hub</title>
+    <title>Gamer Zone - Epic Gaming Hub</title>
     <style>
         * {
             margin: 0;
@@ -19,32 +19,24 @@
         body {
             font-family: 'Courier New', monospace;
             background: 
-                /* Gaming Grid */
-                radial-gradient(circle at 20% 80%, rgba(120,119,198,0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255,119,198,0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(120,219,255,0.3) 0%, transparent 50%),
-                /* Matrix Effect */
-                linear-gradient(90deg, transparent 98%, rgba(0,255,136,0.1) 100%),
-                linear-gradient(0deg, transparent 98%, rgba(0,255,136,0.1) 100%),
                 /* Dark Gaming Base */
-                linear-gradient(45deg, #0a0a23, #1a0033, #000428, #0f0f23);
-            background-size: 100px 100px, 100px 100px, 200px 200px, 50px 50px, 50px 50px, 400% 400%;
-            animation: gamingBg 10s ease infinite, matrixFlow 20s linear infinite;
+                linear-gradient(135deg, #0a0a23, #1a0033, #000428),
+                /* Explosions */
+                radial-gradient(circle at 30% 20%, rgba(255,100,0,0.3) 0%, transparent 40%),
+                radial-gradient(circle at 70% 80%, rgba(255,50,50,0.2) 0%, transparent 40%);
+            background-size: 400% 400%, 300px 300px, 400px 400px;
+            animation: bgShift 12s ease infinite;
             position: relative;
         }
 
-        @keyframes gamingBg {
-            0%, 100% { background-position: 0% 50%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 50%; }
-            50% { background-position: 100% 50%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 50%; }
+        @keyframes bgShift {
+            0%, 100% { background-position: 0% 50%, 0% 0%, 0% 100%; }
+            33% { background-position: 100% 50%, 100% 100%, 100% 0%; }
+            66% { background-position: 50% 50%, 50% 50%, 50% 50%; }
         }
 
-        @keyframes matrixFlow {
-            0% { background-position: 0% 0%, 0% 100%; }
-            100% { background-position: 100% 0%, 100% 100%; }
-        }
-
-        /* Gaming Particles */
-        #particlesCanvas {
+        /* Firing Bullets Canvas */
+        #gameCanvas {
             position: fixed;
             top: 0;
             left: 0;
@@ -52,6 +44,21 @@
             height: 100%;
             z-index: 1;
             pointer-events: none;
+        }
+
+        /* Explosion Effects */
+        .explosion {
+            position: fixed;
+            pointer-events: none;
+            z-index: 2;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffaa00, #ff4400, transparent);
+            animation: explode 0.8s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(8); opacity: 0; }
         }
 
         /* Main Container */
@@ -68,34 +75,34 @@
             padding: 20px;
         }
 
-        /* GAMER ZONE Logo */
+        /* 3D GAMER ZONE Logo */
         .logo-container {
+            perspective: 1000px;
             margin-bottom: 2rem;
             opacity: 0;
-            transform: translateY(50px);
+            transform: translateY(60px) rotateX(30deg);
         }
 
         .logo {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            transform-style: preserve-3d;
             position: relative;
         }
 
-        /* Logo Icon */
+        /* Logo Controller */
         .logo-icon {
-            width: clamp(120px, 25vw, 200px);
-            height: clamp(120px, 25vw, 200px);
+            width: clamp(140px, 28vw, 240px);
+            height: clamp(140px, 28vw, 240px);
             background: 
-                conic-gradient(from 0deg, #ff0040, #ffaa00, #ffff00, #00ff88, #00ccff, #ff00ff, #ff0040);
+                conic-gradient(#ff0040, #ffaa00, #ffff00, #00ff88, #00ccff, #ff00ff);
             border-radius: 50%;
             position: relative;
-            margin-bottom: 1rem;
-            animation: logoSpin 4s linear infinite, logoPulse 2s ease-in-out infinite alternate;
+            margin-bottom: 1.2rem;
+            animation: logo3DRotate 5s linear infinite, logoPulse 2s ease-in-out infinite alternate;
             box-shadow: 
-                0 0 50px rgba(255,0,64,0.6),
-                0 0 100px rgba(0,255,136,0.4),
-                inset 0 0 50px rgba(255,255,255,0.1);
+                0 0 60px rgba(255,0,64,0.7),
+                0 20px 60px rgba(0,0,0,0.5),
+                inset 0 0 60px rgba(255,255,255,0.2);
+            transform: rotateX(20deg) rotateY(20deg);
         }
 
         .logo-icon::before {
@@ -104,114 +111,125 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: clamp(3rem, 8vw, 6rem);
-            filter: drop-shadow(0 0 20px #fff);
-            z-index: 2;
+            font-size: clamp(4rem, 10vw, 7rem);
+            filter: drop-shadow(0 0 25px #fff) brightness(1.2);
         }
 
         .logo-icon::after {
             content: '';
             position: absolute;
-            top: 20%;
-            left: 20%;
-            right: 20%;
-            bottom: 20%;
-            background: radial-gradient(circle, rgba(255,255,255,0.3), transparent);
+            inset: 15%;
+            background: conic-gradient(from 90deg, transparent 0deg, #fff 90deg, transparent 180deg);
             border-radius: 50%;
-            animation: innerGlow 3s ease-in-out infinite alternate;
+            animation: joystickSpin 3s linear infinite;
         }
 
-        @keyframes logoSpin {
+        @keyframes logo3DRotate {
+            0% { transform: rotateX(20deg) rotateY(0deg) rotateZ(0deg); }
+            33% { transform: rotateX(20deg) rotateY(120deg) rotateZ(180deg); }
+            66% { transform: rotateX(20deg) rotateY(240deg) rotateZ(360deg); }
+            100% { transform: rotateX(20deg) rotateY(360deg) rotateZ(0deg); }
+        }
+
+        @keyframes joystickSpin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
 
         @keyframes logoPulse {
-            0% { box-shadow: 0 0 50px rgba(255,0,64,0.6), 0 0 100px rgba(0,255,136,0.4); }
-            100% { box-shadow: 0 0 70px rgba(255,0,64,0.8), 0 0 120px rgba(0,255,136,0.6); }
+            0% { box-shadow: 0 0 60px rgba(255,0,64,0.7), 0 20px 60px rgba(0,0,0,0.5); }
+            100% { box-shadow: 0 0 80px rgba(255,0,64,1), 0 30px 80px rgba(0,0,0,0.7); }
         }
 
-        @keyframes innerGlow {
-            0% { opacity: 0.5; transform: scale(0.8); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        /* GAMER ZONE Text */
+        /* Logo Text */
         .logo-text {
-            font-size: clamp(3rem, 10vw, 8rem);
+            font-size: clamp(3.5rem, 12vw, 9rem);
             font-weight: 900;
-            background: linear-gradient(135deg, #00ff88 0%, #00ccff 25%, #ff00ff 50%, #ffaa00 75%, #00ff88 100%);
-            background-size: 300% 300%;
+            background: linear-gradient(135deg, #00ff88, #00ccff, #ff00ff, #ffaa00);
+            background-size: 400% 400%;
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 
-                0 0 40px #00ff88,
-                0 0 80px #00ccff,
-                0 0 120px #ff00ff;
-            animation: textGlow 2.5s ease-in-out infinite alternate;
-            letter-spacing: 5px;
+                0 0 50px #00ff88,
+                0 0 100px #00ccff,
+                0 0 150px #ff00ff;
+            animation: textRainbow 3s ease infinite;
+            letter-spacing: 8px;
             text-transform: uppercase;
+            transform: rotateX(-10deg);
         }
 
         .logo-text span {
             display: block;
-            font-size: 0.6em;
-            letter-spacing: 2px;
+            font-size: 0.65em;
+            letter-spacing: 3px;
             color: #00ff88;
-            text-shadow: 0 0 20px #00ff88;
-            margin-top: 0.5rem;
+            text-shadow: 0 0 30px #00ff88;
+            margin-top: 0.8rem;
+            animation: glitch 2s infinite;
         }
 
-        @keyframes textGlow {
-            0% { filter: brightness(1) drop-shadow(0 0 20px #00ff88); }
-            100% { filter: brightness(1.4) drop-shadow(0 0 40px #ff00ff); }
+        @keyframes textRainbow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
         }
 
         /* Subtitle */
         .subtitle {
-            font-size: clamp(1.3rem, 4vw, 2.8rem);
+            font-size: clamp(1.5rem, 5vw, 3.2rem);
             color: #00ff88;
-            text-shadow: 0 0 30px #00ff88;
-            margin-bottom: 4rem;
-            animation: subtitleFloat 3s ease-in-out infinite;
+            text-shadow: 0 0 40px #00ff88;
+            margin-bottom: 5rem;
+            animation: subtitleWave 4s ease-in-out infinite;
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(40px);
             font-weight: bold;
+            letter-spacing: 2px;
         }
 
-        @keyframes subtitleFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        @keyframes subtitleWave {
+            0%, 100% { transform: translateY(0) rotateX(0deg); }
+            50% { transform: translateY(-15px) rotateX(5deg); }
         }
 
-        /* Buttons */
+        /* 3D Buttons */
         .btn-group {
             display: flex;
-            gap: 2.5rem;
+            gap: 3rem;
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(40px) rotateX(20deg);
             flex-wrap: wrap;
             justify-content: center;
+            perspective: 1000px;
         }
 
         .btn {
-            padding: 20px 45px;
-            font-size: 1.4rem;
-            font-weight: bold;
+            padding: 22px 50px;
+            font-size: 1.5rem;
+            font-weight: 900;
             border: none;
-            border-radius: 60px;
+            border-radius: 70px;
             cursor: pointer;
             position: relative;
             transform-style: preserve-3d;
-            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-transform: uppercase;
-            letter-spacing: 4px;
+            letter-spacing: 5px;
             text-decoration: none;
             display: inline-block;
             overflow: hidden;
-            min-width: 220px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            min-width: 240px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
         }
 
         .btn::before {
@@ -221,50 +239,49 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.7s;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            transition: left 0.8s;
         }
 
         .btn:hover::before { left: 100%; }
 
         .login-btn {
-            background: linear-gradient(145deg, #ff0040, #ff4080, #ff0066);
+            background: linear-gradient(145deg, #ff0040, #ff4080, #cc0033);
             color: white;
-            box-shadow: 0 15px 40px rgba(255,0,64,0.5);
+            box-shadow: 0 20px 50px rgba(255,0,64,0.6);
         }
 
         .login-btn:hover {
-            transform: translateY(-15px) rotateX(15deg);
-            box-shadow: 0 30px 60px rgba(255,0,64,0.7);
+            transform: translateY(-20px) translateZ(50px) rotateX(20deg) rotateY(20deg);
+            box-shadow: 0 40px 80px rgba(255,0,64,0.9);
         }
 
         .play-btn {
             background: linear-gradient(145deg, #00ff88, #40ffaa, #00cc66);
             color: #000;
-            box-shadow: 0 15px 40px rgba(0,255,136,0.5);
-            font-weight: 900;
+            box-shadow: 0 20px 50px rgba(0,255,136,0.6);
         }
 
         .play-btn:hover {
-            transform: translateY(-15px) rotateX(15deg) scale(1.08);
-            box-shadow: 0 35px 70px rgba(0,255,136,0.8);
+            transform: translateY(-20px) translateZ(60px) rotateX(20deg) rotateY(20deg) scale(1.1);
+            box-shadow: 0 50px 100px rgba(0,255,136,1);
         }
 
         /* Responsive */
         @media (max-width: 768px) {
             .btn-group { gap: 2rem; }
-            .btn { padding: 18px 35px; font-size: 1.2rem; min-width: 200px; }
+            .btn { padding: 20px 40px; font-size: 1.3rem; min-width: 220px; }
         }
 
         @media (max-width: 480px) {
-            .btn-group { flex-direction: column; gap: 1.5rem; }
-            .btn { min-width: 250px; padding: 16px 30px; }
+            .btn-group { flex-direction: column; gap: 2rem; }
+            .btn { min-width: 280px; padding: 18px 35px; }
         }
     </style>
 </head>
 <body>
-    <!-- Gaming Particles -->
-    <canvas id="particlesCanvas"></canvas>
+    <!-- Firing Bullets + Explosions -->
+    <canvas id="gameCanvas"></canvas>
 
     <!-- Main Content -->
     <div class="container">
@@ -273,27 +290,27 @@
                 <div class="logo-icon"></div>
                 <div class="logo-text">
                     GAMER ZONE
-                    <span>Play • Win • Dominate</span>
+                    <span>LOCK &amp; LOAD</span>
                 </div>
             </div>
         </div>
-        <p class="subtitle">Join the Ultimate Gaming Revolution</p>
+        <p class="subtitle">Ready to Dominate the Arena?</p>
         <div class="btn-group">
             <a href="#login" class="btn login-btn">LOGIN</a>
-            <a href="#play" class="btn play-btn">PLAY NOW</a>
+            <a href="game.html" class="btn play-btn" target="_blank">PLAY NOW</a>
         </div>
     </div>
 
     <script>
-        // Advanced Gaming Particles
-        class GamingParticles {
+        // 🔥 FIRING BULLETS + EXPLOSIONS SYSTEM
+        class GamingEngine {
             constructor() {
-                this.canvas = document.getElementById('particlesCanvas');
+                this.canvas = document.getElementById('gameCanvas');
                 this.ctx = this.canvas.getContext('2d');
                 this.resize();
-                this.particles = [];
-                this.mouseX = 0;
-                this.mouseY = 0;
+                this.bullets = [];
+                this.explosions = [];
+                this.lastShot = 0;
                 this.init();
             }
 
@@ -303,130 +320,124 @@
             }
 
             init() {
-                for (let i = 0; i < 100; i++) {
-                    this.particles.push({
-                        x: Math.random() * this.canvas.width,
-                        y: Math.random() * this.canvas.height,
-                        vx: (Math.random() - 0.5) * 0.5,
-                        vy: (Math.random() - 0.5) * 0.5,
-                        size: Math.random() * 2 + 1,
-                        opacity: Math.random() * 0.6 + 0.2,
-                        hue: Math.random() * 60 + 180, // Gaming colors
-                        life: 1
-                    });
-                }
                 this.animate();
+            }
+
+            createBullet() {
+                const side = Math.floor(Math.random() * 4);
+                let x, y, vx, vy;
+                
+                switch(side) {
+                    case 0: // Top
+                        x = Math.random() * this.canvas.width;
+                        y = 0;
+                        vx = (Math.random() - 0.5) * 4;
+                        vy = Math.random() * 3 + 4;
+                        break;
+                    case 1: // Right
+                        x = this.canvas.width;
+                        y = Math.random() * this.canvas.height;
+                        vx = -(Math.random() * 3 + 4);
+                        vy = (Math.random() - 0.5) * 4;
+                        break;
+                    case 2: // Bottom
+                        x = Math.random() * this.canvas.width;
+                        y = this.canvas.height;
+                        vx = (Math.random() - 0.5) * 4;
+                        vy = -(Math.random() * 3 + 4);
+                        break;
+                    case 3: // Left
+                        x = 0;
+                        y = Math.random() * this.canvas.height;
+                        vx = Math.random() * 3 + 4;
+                        vy = (Math.random() - 0.5) * 4;
+                        break;
+                }
+
+                this.bullets.push({ x, y, vx, vy, life: 1 });
+            }
+
+            createExplosion(x, y) {
+                const exp = document.createElement('div');
+                exp.className = 'explosion';
+                exp.style.left = x + 'px';
+                exp.style.top = y + 'px';
+                exp.style.width = '20px';
+                exp.style.height = '20px';
+                document.body.appendChild(exp);
+                setTimeout(() => exp.remove(), 800);
+            }
+
+            update() {
+                const now = Date.now();
+                
+                // Auto-fire bullets
+                if (now - this.lastShot > 80 + Math.random() * 200) {
+                    this.createBullet();
+                    this.lastShot = now;
+                }
+
+                // Update bullets
+                for (let i = this.bullets.length - 1; i >= 0; i--) {
+                    const b = this.bullets[i];
+                    b.x += b.vx;
+                    b.y += b.vy;
+                    b.life -= 0.02;
+
+                    // Bullet trail
+                    this.ctx.strokeStyle = `rgba(255, ${Math.floor(100 + b.life * 155)}, 0, ${b.life})`;
+                    this.ctx.lineWidth = 3;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(b.x, b.y);
+                    this.ctx.lineTo(b.x - b.vx * 5, b.y - b.vy * 5);
+                    this.ctx.stroke();
+
+                    // Bullet head
+                    this.ctx.fillStyle = `rgba(255, ${Math.floor(200 + b.life * 55)}, 0, ${b.life * 2})`;
+                    this.ctx.shadowColor = '#ffaa00';
+                    this.ctx.shadowBlur = 20;
+                    this.ctx.beginPath();
+                    this.ctx.arc(b.x, b.y, 4, 0, Math.PI * 2);
+                    this.ctx.fill();
+
+                    // Remove dead bullets
+                    if (b.life <= 0 || b.x < -50 || b.x > this.canvas.width + 50 || 
+                        b.y < -50 || b.y > this.canvas.height + 50) {
+                        this.createExplosion(b.x, b.y);
+                        this.bullets.splice(i, 1);
+                    }
+                }
             }
 
             animate() {
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                
-                this.particles.forEach(p => {
-                    // Mouse attraction
-                    const dx = this.mouseX - p.x;
-                    const dy = this.mouseY - p.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 150) {
-                        p.vx += dx * 0.01;
-                        p.vy += dy * 0.01;
-                    }
-
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.life -= 0.002;
-
-                    // Wrap around
-                    if (p.x < 0) p.x = this.canvas.width;
-                    if (p.x > this.canvas.width) p.x = 0;
-                    if (p.y < 0) p.y = this.canvas.height;
-                    if (p.y > this.canvas.height) p.y = 0;
-
-                    // Draw particle
-                    this.ctx.save();
-                    this.ctx.globalAlpha = p.opacity * p.life;
-                    this.ctx.fillStyle = `hsl(${p.hue}, 100%, ${50 + p.life * 30}%)`;
-                    this.ctx.shadowColor = `hsl(${p.hue}, 100%, 70%)`;
-                    this.ctx.shadowBlur = 15;
-                    this.ctx.beginPath();
-                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    this.ctx.fill();
-                    this.ctx.restore();
-                });
-
+                this.update();
                 requestAnimationFrame(() => this.animate());
             }
         }
 
-        // Entrance Animation
-        function entranceAnimation() {
-            const timeline = [
-                { selector: '.logo-container', delay: 300 },
-                { selector: '.subtitle', delay: 1000 },
-                { selector: '.btn-group', delay: 1800 }
-            ];
-
-            timeline.forEach(({ selector, delay }) => {
+        // 3D Entrance Animation
+        function entrance3D() {
+            const els = ['.logo-container', '.subtitle', '.btn-group'];
+            els.forEach((sel, i) => {
                 setTimeout(() => {
-                    const el = document.querySelector(selector);
-                    el.style.transition = 'all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                    const el = document.querySelector(sel);
+                    el.style.transition = `all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)`;
                     el.style.opacity = '1';
-                    el.style.transform = 'translateY(0)';
-                }, delay);
+                    el.style.transform = 'translateY(0) rotateX(0deg)';
+                }, i * 600 + 400);
             });
         }
 
-        // Button Effects
-        document.querySelectorAll('.btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                // Explosive effect
-                btn.style.transform = 'scale(0.95)';
-                document.body.style.filter = 'brightness(1.3)';
-                
-                setTimeout(() => {
-                    btn.style.transform = '';
-                    document.body.style.filter = '';
-                }, 200);
-
-                // Action feedback
-                setTimeout(() => {
-                    if (btn.classList.contains('login-btn')) {
-                        alert('🔐 Welcome back, Gamer!\nLogin to access your profile!');
-                    } else {
-                        alert('🎮 GAME ON!\nEntering Gamer Zone...');
-                        document.body.style.animation = 'none';
-                        setTimeout(() => {
-                            document.body.style.animation = '';
-                        }, 100);
-                    }
-                }, 300);
-            });
-
-            // Hover sound effect (visual)
-            btn.addEventListener('mouseenter', () => {
-                btn.style.filter = 'brightness(1.2)';
-            });
-            btn.addEventListener('mouseleave', () => {
-                btn.style.filter = '';
-            });
-        });
-
-        // Mouse tracking for particles
-        document.addEventListener('mousemove', (e) => {
-            particlesSystem.mouseX = e.clientX;
-            particlesSystem.mouseY = e.clientY;
-        });
-
-        // Initialize
-        let particlesSystem;
+        // Initialize Gaming Engine
+        let gameEngine;
         window.addEventListener('load', () => {
-            particlesSystem = new GamingParticles();
-            entranceAnimation();
+            gameEngine = new GamingEngine();
+            entrance3D();
         });
 
         window.addEventListener('resize', () => {
-            if (particlesSystem) particlesSystem.resize();
+            if (gameEngine) gameEngine.resize();
         });
     </script>
 </body>
