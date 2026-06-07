@@ -6,113 +6,140 @@
 <title>Panda Login</title>
 
 <style>
-*{
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background: radial-gradient(circle, #7CFF6B, #2e7d32);
+  font-family: Arial;
 }
 
-body {
-  background-color: #59cd49;
+.container{
+  position:relative;
 }
 
-.container {
-  height: 31.25em;
-  width: 31.25em;
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
+/* ===== 3D EFFECT BASE ===== */
+.panda{
+  width:180px;
+  height:180px;
+  position:absolute;
+  top:-140px;
+  left:50%;
+  transform:translateX(-50%);
+  transform-style:preserve-3d;
+  animation: float 3s ease-in-out infinite;
 }
 
-form {
-  width: 23.75em;
-  height: 18.75em;
-  background-color: #ffffff;
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: calc(50% + 3.1em);
-  left: 50%;
-  padding: 0 3.1em;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  border-radius: 0.5em;
+@keyframes float{
+  0%,100%{ transform:translateX(-50%) translateY(0px);}
+  50%{ transform:translateX(-50%) translateY(-10px);}
 }
 
-form label {
-  display: block;
-  margin-bottom: 0.2em;
-  font-weight: 600;
+.face{
+  width:100%;
+  height:100%;
+  background: linear-gradient(145deg,#fff,#dcdcdc);
+  border-radius:50%;
+  box-shadow:
+    inset -8px -8px 15px rgba(0,0,0,0.2),
+    10px 10px 25px rgba(0,0,0,0.3);
+  position:relative;
 }
 
-form input {
-  font-size: 0.95em;
-  padding: 0.3em;
-  border: none;
-  border-bottom: 0.12em solid #3f3554;
-  outline: none;
+/* ears */
+.ear{
+  width:50px;
+  height:50px;
+  background:#2b2b2b;
+  border-radius:50%;
+  position:absolute;
+  top:-20px;
+  box-shadow: inset -5px -5px 10px rgba(0,0,0,0.5);
+}
+.ear.left{ left:10px; }
+.ear.right{ right:10px; }
+
+/* eyes */
+.eye{
+  width:35px;
+  height:45px;
+  background:#2b2b2b;
+  border-radius:50%;
+  position:absolute;
+  top:55px;
+  box-shadow: inset -3px -3px 6px rgba(0,0,0,0.5);
+}
+.eye.left{ left:35px; transform:rotate(-10deg);}
+.eye.right{ right:35px; transform:rotate(10deg); }
+
+.eye span{
+  width:10px;
+  height:10px;
+  background:#fff;
+  border-radius:50%;
+  position:absolute;
+  top:10px;
+  left:10px;
 }
 
-form button {
-  margin-top: 0.8em;
-  padding: 0.8em;
-  border: none;
-  border-radius: 2em;
-  background: #59cd49;
-  cursor: pointer;
-  font-weight: 600;
+/* nose */
+.nose{
+  width:18px;
+  height:12px;
+  background:#111;
+  border-radius:50%;
+  position:absolute;
+  top:95px;
+  left:50%;
+  transform:translateX(-50%);
 }
 
-/* panda */
-.panda-face {
-  height: 7.5em;
-  width: 8.4em;
-  background: #fff;
-  border: 0.18em solid #2e0d30;
-  border-radius: 50%;
-  position: absolute;
-  top: 2em;
-  left: 50%;
-  transform: translateX(-50%);
+/* mouth */
+.mouth{
+  width:40px;
+  height:20px;
+  border-bottom:3px solid #111;
+  border-radius:50%;
+  position:absolute;
+  top:110px;
+  left:50%;
+  transform:translateX(-50%);
 }
 
-.eye-l, .eye-r {
-  position: absolute;
-  height: 2em;
-  width: 2em;
-  background: #3f3554;
-  border-radius: 50%;
-  top: 2em;
+/* form */
+form{
+  width:260px;
+  padding:20px;
+  background:#fff;
+  border-radius:15px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.3);
 }
 
-.eye-l { left: 1.5em; }
-.eye-r { right: 1.5em; }
-
-.eyeball-l, .eyeball-r {
-  position: absolute;
-  height: 0.6em;
-  width: 0.6em;
-  background: #fff;
-  border-radius: 50%;
-  left: 0.6em;
-  top: 0.6em;
-  transition: 0.5s;
+input{
+  width:100%;
+  margin:10px 0;
+  padding:10px;
+  border:none;
+  border-bottom:2px solid #2e7d32;
+  outline:none;
 }
 
-.hand-l, .hand-r {
-  position: absolute;
-  height: 2.8em;
-  width: 2.5em;
-  background: #3f3554;
-  top: 8.4em;
-  transition: 0.5s;
+button{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border:none;
+  border-radius:20px;
+  background:#2e7d32;
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
 }
-
-.hand-l { left: 7.5em; }
-.hand-r { right: 7.5em; }
-
+button:hover{
+  transform:scale(1.05);
+}
 </style>
 </head>
 
@@ -120,78 +147,30 @@ form button {
 
 <div class="container">
 
-  <div class="panda-face">
-    <div class="eye-l"><div class="eyeball-l"></div></div>
-    <div class="eye-r"><div class="eyeball-r"></div></div>
+  <div class="panda">
+    <div class="ear left"></div>
+    <div class="ear right"></div>
+
+    <div class="face">
+      <div class="eye left"><span></span></div>
+      <div class="eye right"><span></span></div>
+      <div class="nose"></div>
+      <div class="mouth"></div>
+    </div>
   </div>
 
-  <form>
-    <label>Username</label>
-    <input id="username" type="text"/>
-
-    <label>Password</label>
-    <input id="password" type="password"/>
-
-    <button type="button">Login</button>
+  <form id="loginForm">
+    <input type="text" placeholder="Username" required />
+    <input type="password" placeholder="Password" required />
+    <button type="submit">LOGIN</button>
   </form>
-
-  <div class="hand-l"></div>
-  <div class="hand-r"></div>
 
 </div>
 
 <script>
-let usernameRef = document.getElementById("username");
-let passwordRef = document.getElementById("password");
-let eyeL = document.querySelector(".eyeball-l");
-let eyeR = document.querySelector(".eyeball-r");
-let handL = document.querySelector(".hand-l");
-let handR = document.querySelector(".hand-r");
-
-function normalEyeStyle(){
-  eyeL.style.left = "0.6em";
-  eyeL.style.top = "0.6em";
-  eyeR.style.right = "0.6em";
-  eyeR.style.top = "0.6em";
-}
-
-function normalHandStyle(){
-  handL.style.height = "2.8em";
-  handL.style.top = "8.4em";
-  handL.style.left = "7.5em";
-  handL.style.transform = "rotate(0deg)";
-
-  handR.style.height = "2.8em";
-  handR.style.top = "8.4em";
-  handR.style.right = "7.5em";
-  handR.style.transform = "rotate(0deg)";
-}
-
-usernameRef.addEventListener("focus", () => {
-  eyeL.style.top = "1.2em";
-  eyeR.style.top = "1.2em";
-  normalHandStyle();
-});
-
-passwordRef.addEventListener("focus", () => {
-  handL.style.height = "6em";
-  handL.style.transform = "rotate(-155deg)";
-  handL.style.top = "3.8em";
-  handL.style.left = "11em";
-
-  handR.style.height = "6em";
-  handR.style.transform = "rotate(155deg)";
-  handR.style.top = "3.8em";
-  handR.style.right = "11em";
-
-  normalEyeStyle();
-});
-
-document.addEventListener("click", (e) => {
-  if(e.target !== usernameRef && e.target !== passwordRef){
-    normalEyeStyle();
-    normalHandStyle();
-  }
+document.getElementById("loginForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  window.location.href = "game.html";
 });
 </script>
 
