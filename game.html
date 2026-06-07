@@ -1,296 +1,135 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Game Hub Pro</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
-
-<style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:'Poppins',sans-serif;
-}
-
-body{
-  background:#020617;
-  color:white;
-}
-
-/* NAV */
-.navbar{
-  display:flex;
-  justify-content:space-between;
-  padding:18px 40px;
-  background:#020617;
-  border-bottom:1px solid #1e293b;
-}
-
-.logo{
-  color:#38bdf8;
-  font-weight:bold;
-  font-size:18px;
-}
-
-.menu a{
-  margin:0 15px;
-  color:#94a3b8;
-  text-decoration:none;
-  transition:0.3s;
-}
-
-.menu a:hover{
-  color:#38bdf8;
-}
-
-/* HERO */
-.hero{
-  margin:25px;
-  padding:70px 50px;
-  border-radius:20px;
-  background:url('https://images.unsplash.com/photo-1542751371-adc38448a05e') center/cover;
-  position:relative;
-}
-
-.hero::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(to right, rgba(0,0,0,0.9), transparent);
-  border-radius:20px;
-}
-
-.hero-content{
-  position:relative;
-  z-index:2;
-  max-width:500px;
-}
-
-.hero h1{
-  font-size:40px;
-  margin-bottom:10px;
-}
-
-.hero p{
-  color:#94a3b8;
-}
-
-.hero button{
-  margin-top:20px;
-  padding:12px 30px;
-  background:#f97316;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-  box-shadow:0 0 20px #f97316;
-}
-
-/* LAYOUT */
-.container{
-  display:flex;
-  gap:25px;
-  padding:25px;
-}
-
-/* LEFT */
-.left{
-  flex:3;
-}
-
-.section-title{
-  margin-bottom:15px;
-  font-size:20px;
-}
-
-/* GRID */
-  
-.games{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:30px;   /* spacing */
-}
-
-.card{
-  background:#0f172a;
-  border-radius:15px;
-  overflow:hidden;
-  transition:0.4s ease;
-  position:relative;
-  cursor:pointer;
-}
-
-.card:hover{
-  transform:translateY(-10px) scale(1.03);
-  box-shadow:0 0 30px rgba(56,189,248,0.6);
-}
-.card img{
-  width:100%;
-  height:140px;
-  object-fit:cover;
-}
-.card img{
-  transition:0.4s;
-}
-.card::after{
- .card:hover img{
-  transform:scale(1.1);
-}
-  .card::after{
-  content:"PLAY NOW";
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,0.6);
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:18px;
-  opacity:0;
-  transition:0.3s;
-}
-
-.card:hover::after{
-  opacity:1;
-}
-.card h3{
-  padding:12px;
-}
-
-.rating{
-  position:absolute;
-  top:10px;
-  right:10px;
-  background:#f97316;
-  padding:5px 8px;
-  border-radius:6px;
-  font-size:12px;
-}
-
-/* RIGHT PANEL */
-.right{
-  flex:1;
-}
-
-.panel{
-  background:#0f172a;
-  padding:18px;
-  border-radius:12px;
-  margin-bottom:20px;
-}
-
-.panel h3{
-  margin-bottom:10px;
-  color:#38bdf8;
-}
-
-.panel p{
-  font-size:14px;
-  color:#94a3b8;
-}
-
-/* MOBILE */
-@media(max-width:768px){
-  .container{
-    flex-direction:column;
-  }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GameVault - Epic Gaming Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; }
+    .neon-text { text-shadow: 0 0 10px #22d3ee, 0 0 20px #22d3ee; }
+    .game-card { transition: all 0.3s ease; }
+    .game-card:hover { transform: scale(1.08); box-shadow: 0 0 25px rgba(34, 211, 238, 0.6); }
+  </style>
 </head>
+<body class="bg-zinc-950 text-white">
 
-<body>
-
-<!-- NAV -->
-<div class="navbar">
-  <div class="logo">GAME HUB</div>
-  <div class="menu">
-    <a href="#">Home</a>
-    <a href="#">Games</a>
-    <a href="#">Community</a>
-  </div>
-</div>
-
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-content">
-    <h1>Embark on your next adventure</h1>
-    <p>Discover games, tournaments and community</p>
-    <button>Join Now</button>
-  </div>
-</div>
-
-<!-- MAIN -->
-<div class="container">
-
-  <!-- LEFT -->
- <div class="left">
-
-  <div class="section-title">Featured Games</div>
-
-  <div class="games">   <!-- 🔥 ADD THIS -->
-
-    <div class="card" onclick="openChess()">
-      <span class="rating">4.5⭐</span>
-      <img src="chess.jpg" 
-      <h3>Chess</h3>
+  <!-- Navbar -->
+  <nav class="bg-black border-b border-cyan-500 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <i class="fas fa-gamepad text-4xl text-cyan-400"></i>
+        <h1 class="text-3xl font-bold neon-text">GAMEVAULT</h1>
+      </div>
+      <div class="flex gap-8 text-lg">
+        <a href="#" class="hover:text-cyan-400 transition">Home</a>
+        <a href="#games" class="hover:text-cyan-400 transition">Games</a>
+        <a href="#" class="hover:text-cyan-400 transition">Categories</a>
+        <a href="#" class="hover:text-cyan-400 transition">Community</a>
+      </div>
+      <div class="flex items-center gap-4">
+        <input type="text" placeholder="Search games..." 
+               class="bg-zinc-900 border border-cyan-500 rounded-full px-5 py-2 w-80 focus:outline-none focus:border-cyan-300">
+        <button class="bg-cyan-500 hover:bg-cyan-600 px-6 py-2 rounded-full font-semibold">Login</button>
+      </div>
     </div>
+  </nav>
 
-    
-<div class="card" onclick="openLudo()">
-  <span class="rating">4.8⭐</span>
-  <img src="ludo.jpg">
-  <h3>Ludo</h3>
-</div>
-    
-  <div class="card" onclick="openCarrom()">
-  <span class="rating">4.6⭐</span>
-  <img src="carrom.jpg">
-  <h3>Carrom</h3>
+  <!-- Hero Section -->
+  <div class="relative h-screen bg-cover bg-center flex items-center" 
+       style="background-image: url('https://images.unsplash.com/photo-1616588587689-4e5b0c5e5b5b')">
+    <div class="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent"></div>
+    <div class="max-w-4xl mx-auto px-6 relative z-10">
+      <h2 class="text-6xl font-bold mb-4 neon-text">WELCOME TO THE ARENA</h2>
+      <p class="text-2xl mb-8 text-cyan-300">Play. Compete. Dominate.</p>
+      <button onclick="document.getElementById('games').scrollIntoView({behavior: 'smooth'})"
+              class="bg-white text-black px-10 py-4 rounded-full text-xl font-bold hover:bg-cyan-400 transition">
+        EXPLORE GAMES →
+      </button>
+    </div>
   </div>
 
-  </div>  <!-- 🔥 CLOSE -->
+  <!-- Games Section -->
+  <section id="games" class="max-w-7xl mx-auto px-6 py-16">
+    <h2 class="text-5xl font-bold text-center mb-12 neon-text">🎮 YOUR GAME LIBRARY</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      
+      <!-- Game Card 1 -->
+      <div class="game-card bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-700">
+        <div class="h-52 bg-gradient-to-br from-purple-600 to-cyan-500 flex items-center justify-center">
+          <span class="text-6xl">🎮</span>
+        </div>
+        <div class="p-5">
+          <h3 class="text-2xl font-semibold mb-1">Game Name 1</h3>
+          <p class="text-zinc-400 text-sm mb-4">Action • Adventure</p>
+          <a href="YOUR_GAME_LINK_HERE" target="_blank"
+             class="block bg-cyan-500 hover:bg-cyan-600 text-center py-3 rounded-xl font-bold text-lg">
+            ▶️ PLAY NOW
+          </a>
+        </div>
+      </div>
 
-</div>   <!-- RIGHT -->
-  <div class="right">
+      <!-- Game Card 2 -->
+      <div class="game-card bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-700">
+        <div class="h-52 bg-gradient-to-br from-red-600 to-orange-500 flex items-center justify-center">
+          <span class="text-6xl">🏎️</span>
+        </div>
+        <div class="p-5">
+          <h3 class="text-2xl font-semibold mb-1">Game Name 2</h3>
+          <p class="text-zinc-400 text-sm mb-4">Racing • Multiplayer</p>
+          <a href="YOUR_GAME_LINK_HERE" target="_blank"
+             class="block bg-cyan-500 hover:bg-cyan-600 text-center py-3 rounded-xl font-bold text-lg">
+            ▶️ PLAY NOW
+          </a>
+        </div>
+      </div>
 
-    <div class="panel">
-      <h3>Latest News</h3>
-      <p>🔥 New update released</p>
-      <p>🎮 Tournament starts soon</p>
+      <!-- Game Card 3 -->
+      <div class="game-card bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-700">
+        <div class="h-52 bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
+          <span class="text-6xl">⚔️</span>
+        </div>
+        <div class="p-5">
+          <h3 class="text-2xl font-semibold mb-1">Game Name 3</h3>
+          <p class="text-zinc-400 text-sm mb-4">Battle Royale</p>
+          <a href="YOUR_GAME_LINK_HERE" target="_blank"
+             class="block bg-cyan-500 hover:bg-cyan-600 text-center py-3 rounded-xl font-bold text-lg">
+            ▶️ PLAY NOW
+          </a>
+        </div>
+      </div>
+
+      <!-- Game Card 4 -->
+      <div class="game-card bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-700">
+        <div class="h-52 bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center">
+          <span class="text-6xl">🧠</span>
+        </div>
+        <div class="p-5">
+          <h3 class="text-2xl font-semibold mb-1">Game Name 4</h3>
+          <p class="text-zinc-400 text-sm mb-4">Puzzle • Strategy</p>
+          <a href="YOUR_GAME_LINK_HERE" target="_blank"
+             class="block bg-cyan-500 hover:bg-cyan-600 text-center py-3 rounded-xl font-bold text-lg">
+            ▶️ PLAY NOW
+          </a>
+        </div>
+      </div>
+
     </div>
+  </section>
 
-    <div class="panel">
-      <h3>Tournaments</h3>
-      <p>🏆 Prize ₹50,000</p>
-      <p>📅 Tomorrow</p>
-    </div>
-
+  <!-- Add More Games Button -->
+  <div class="text-center mb-16">
+    <button onclick="alert('Add more game cards by copying the template!')" 
+            class="bg-zinc-800 hover:bg-zinc-700 px-8 py-4 rounded-full text-lg font-semibold border border-cyan-500">
+      + Add More Games
+    </button>
   </div>
 
-</div>
-  <script>
-function openGame(url){
-  window.location.href = url;
-}
-
-function openChess(){
-  window.location.href = "https://cardgames.io/chess/";
-}
-    
-function openLudo(){
-  window.open("https://ludoking.com/play/", "_blank");
-}
-
-   
-function openCarrom(){
-  window.open("https://gamesnacks.com/games/carromclash", "_blank");
-}
-   
-  
-</script>
+  <footer class="bg-black py-12 border-t border-zinc-800 text-center">
+    <p class="text-zinc-500">Made with 🔥 for the real gamers</p>
+  </footer>
 
 </body>
 </html>
