@@ -1,178 +1,1269 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Panda Login</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#030712">
+
+<title>GameHub | Enter The Game</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
 body{
-  margin:0;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background: radial-gradient(circle, #7CFF6B, #2e7d32);
-  font-family: Arial;
+    font-family:Poppins,sans-serif;
+    background:#030712;
+    color:white;
+    overflow-x:hidden;
 }
 
-.container{
-  position:relative;
+/* ================= BACKGROUND ================= */
+
+.background{
+    position:fixed;
+    inset:0;
+    z-index:-10;
+    overflow:hidden;
+    background:
+        radial-gradient(circle at 15% 20%,rgba(0,229,255,.15),transparent 28%),
+        radial-gradient(circle at 85% 75%,rgba(124,58,237,.18),transparent 30%),
+        #030712;
 }
 
-/* ===== 3D EFFECT BASE ===== */
-.panda{
-  width:180px;
-  height:180px;
-  position:absolute;
-  top:-140px;
-  left:50%;
-  transform:translateX(-50%);
-  transform-style:preserve-3d;
-  animation: float 3s ease-in-out infinite;
+.grid{
+    position:absolute;
+    width:200%;
+    height:200%;
+    left:-50%;
+    top:-20%;
+    background-image:
+        linear-gradient(rgba(0,229,255,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,229,255,.045) 1px,transparent 1px);
+    background-size:55px 55px;
+
+    transform:perspective(500px) rotateX(60deg);
+
+    animation:gridMove 12s linear infinite;
 }
 
-@keyframes float{
-  0%,100%{ transform:translateX(-50%) translateY(0px);}
-  50%{ transform:translateX(-50%) translateY(-10px);}
+@keyframes gridMove{
+
+    from{
+        transform:perspective(500px) rotateX(60deg) translateY(0);
+    }
+
+    to{
+        transform:perspective(500px) rotateX(60deg) translateY(55px);
+    }
 }
 
-.face{
-  width:100%;
-  height:100%;
-  background: linear-gradient(145deg,#fff,#dcdcdc);
-  border-radius:50%;
-  box-shadow:
-    inset -8px -8px 15px rgba(0,0,0,0.2),
-    10px 10px 25px rgba(0,0,0,0.3);
-  position:relative;
+
+/* ================= GLOW ORBS ================= */
+
+.orb{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(80px);
+    opacity:.45;
 }
 
-/* ears */
-.ear{
-  width:50px;
-  height:50px;
-  background:#2b2b2b;
-  border-radius:50%;
-  position:absolute;
-  top:-20px;
-  box-shadow: inset -5px -5px 10px rgba(0,0,0,0.5);
-}
-.ear.left{ left:10px; }
-.ear.right{ right:10px; }
-
-/* eyes */
-.eye{
-  width:35px;
-  height:45px;
-  background:#2b2b2b;
-  border-radius:50%;
-  position:absolute;
-  top:55px;
-  box-shadow: inset -3px -3px 6px rgba(0,0,0,0.5);
-}
-.eye.left{ left:35px; transform:rotate(-10deg);}
-.eye.right{ right:35px; transform:rotate(10deg); }
-
-.eye span{
-  width:10px;
-  height:10px;
-  background:#fff;
-  border-radius:50%;
-  position:absolute;
-  top:10px;
-  left:10px;
+.orb1{
+    width:300px;
+    height:300px;
+    background:#00e5ff;
+    top:15%;
+    left:-120px;
+    animation:orb1 8s ease-in-out infinite;
 }
 
-/* nose */
-.nose{
-  width:18px;
-  height:12px;
-  background:#111;
-  border-radius:50%;
-  position:absolute;
-  top:95px;
-  left:50%;
-  transform:translateX(-50%);
+.orb2{
+    width:350px;
+    height:350px;
+    background:#7c3aed;
+    right:-150px;
+    bottom:5%;
+    animation:orb2 9s ease-in-out infinite;
 }
 
-/* mouth */
-.mouth{
-  width:40px;
-  height:20px;
-  border-bottom:3px solid #111;
-  border-radius:50%;
-  position:absolute;
-  top:110px;
-  left:50%;
-  transform:translateX(-50%);
+@keyframes orb1{
+
+    50%{
+        transform:translate(80px,40px);
+    }
 }
 
-/* form */
-form{
-  width:260px;
-  padding:20px;
-  background:#fff;
-  border-radius:15px;
-  box-shadow:0 20px 40px rgba(0,0,0,0.3);
+@keyframes orb2{
+
+    50%{
+        transform:translate(-80px,-40px);
+    }
 }
 
-input{
-  width:100%;
-  margin:10px 0;
-  padding:10px;
-  border:none;
-  border-bottom:2px solid #2e7d32;
-  outline:none;
+
+/* ================= PARTICLES ================= */
+
+.particles{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:-5;
 }
 
-button{
-  width:100%;
-  padding:10px;
-  margin-top:10px;
-  border:none;
-  border-radius:20px;
-  background:#2e7d32;
-  color:#fff;
-  font-weight:bold;
-  cursor:pointer;
+.particle{
+    position:absolute;
+    width:3px;
+    height:3px;
+    border-radius:50%;
+    background:#00e5ff;
+    box-shadow:0 0 12px #00e5ff;
+
+    animation:particleMove linear infinite;
 }
-button:hover{
-  transform:scale(1.05);
+
+@keyframes particleMove{
+
+    from{
+        transform:translateY(110vh);
+        opacity:0;
+    }
+
+    20%{
+        opacity:.8;
+    }
+
+    80%{
+        opacity:.8;
+    }
+
+    to{
+        transform:translateY(-10vh);
+        opacity:0;
+    }
 }
+
+
+/* ================= NAVBAR ================= */
+
+.navbar{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:75px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 7%;
+
+    background:rgba(3,7,18,.55);
+    backdrop-filter:blur(18px);
+
+    border-bottom:1px solid rgba(255,255,255,.07);
+
+    z-index:100;
+}
+
+.logo{
+    font-family:Orbitron,sans-serif;
+    font-size:23px;
+    font-weight:900;
+    letter-spacing:2px;
+}
+
+.logo span{
+    color:#00e5ff;
+
+    text-shadow:
+        0 0 10px #00e5ff,
+        0 0 30px rgba(0,229,255,.5);
+}
+
+.nav-links{
+    display:flex;
+    align-items:center;
+    gap:30px;
+}
+
+.nav-links a{
+    color:#9ba6bb;
+    text-decoration:none;
+    font-size:14px;
+    transition:.3s;
+}
+
+.nav-links a:hover{
+    color:#00e5ff;
+}
+
+.nav-play{
+    padding:9px 20px;
+    border:1px solid rgba(0,229,255,.5);
+    border-radius:30px;
+    color:#00e5ff!important;
+}
+
+.nav-play:hover{
+    background:#00e5ff;
+    color:#02040a!important;
+    box-shadow:0 0 25px rgba(0,229,255,.5);
+}
+
+
+/* ================= HERO ================= */
+
+.hero{
+    min-height:100vh;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:50px;
+
+    padding:130px 7% 70px;
+}
+
+.hero-content{
+    max-width:700px;
+
+    animation:heroEnter 1s ease forwards;
+}
+
+@keyframes heroEnter{
+
+    from{
+        opacity:0;
+        transform:translateY(35px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+
+/* ================= BADGE ================= */
+
+.badge{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+
+    padding:8px 15px;
+
+    border-radius:30px;
+
+    background:rgba(0,229,255,.06);
+
+    border:1px solid rgba(0,229,255,.25);
+
+    color:#9defff;
+
+    font-size:11px;
+    letter-spacing:1px;
+
+    margin-bottom:25px;
+}
+
+.badge-dot{
+    width:7px;
+    height:7px;
+
+    border-radius:50%;
+
+    background:#00e5ff;
+
+    box-shadow:0 0 15px #00e5ff;
+
+    animation:blink 1.2s infinite;
+}
+
+@keyframes blink{
+
+    50%{
+        opacity:.25;
+    }
+}
+
+
+/* ================= HEADING ================= */
+
+h1{
+    font-family:Orbitron,sans-serif;
+
+    font-size:clamp(48px,8vw,95px);
+
+    line-height:.95;
+
+    letter-spacing:-4px;
+
+    margin-bottom:25px;
+}
+
+.cyan{
+    color:#00e5ff;
+
+    text-shadow:
+        0 0 10px rgba(0,229,255,.5),
+        0 0 40px rgba(0,229,255,.25);
+}
+
+.outline{
+    color:transparent;
+
+    -webkit-text-stroke:1px rgba(255,255,255,.65);
+}
+
+
+/* ================= DESCRIPTION ================= */
+
+.description{
+    color:#8995aa;
+
+    max-width:580px;
+
+    font-size:15px;
+
+    line-height:1.8;
+
+    margin-bottom:35px;
+}
+
+
+/* ================= BUTTONS ================= */
+
+.buttons{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.play-btn{
+
+    position:relative;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+
+    min-width:180px;
+
+    padding:16px 28px;
+
+    border-radius:12px;
+
+    background:#00e5ff;
+
+    color:#02040a;
+
+    text-decoration:none;
+
+    font-weight:700;
+
+    overflow:hidden;
+
+    box-shadow:
+        0 0 20px rgba(0,229,255,.4),
+        0 0 60px rgba(0,229,255,.15);
+
+    transition:.35s;
+}
+
+.play-btn::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:60%;
+    height:100%;
+
+    left:-100%;
+    top:0;
+
+    background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.8),
+        transparent
+    );
+
+    transform:skewX(-20deg);
+
+    animation:shine 3s infinite;
+}
+
+@keyframes shine{
+
+    0%,55%{
+        left:-100%;
+    }
+
+    75%,100%{
+        left:150%;
+    }
+}
+
+.play-btn:hover{
+
+    transform:translateY(-6px) scale(1.03);
+
+    box-shadow:
+        0 0 30px rgba(0,229,255,.7),
+        0 0 90px rgba(0,229,255,.25);
+}
+
+.arrow{
+    font-size:20px;
+}
+
+.explore-btn{
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    min-width:180px;
+
+    padding:16px 28px;
+
+    border-radius:12px;
+
+    color:white;
+
+    text-decoration:none;
+
+    border:1px solid rgba(255,255,255,.14);
+
+    background:rgba(255,255,255,.04);
+
+    backdrop-filter:blur(10px);
+
+    transition:.35s;
+}
+
+.explore-btn:hover{
+
+    transform:translateY(-6px);
+
+    border-color:rgba(0,229,255,.45);
+
+    background:rgba(0,229,255,.07);
+}
+
+
+/* ================= HERO VISUAL ================= */
+
+.visual{
+
+    width:min(430px,40vw);
+
+    aspect-ratio:1;
+
+    position:relative;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    animation:visualEnter 1.3s ease forwards;
+}
+
+@keyframes visualEnter{
+
+    from{
+        opacity:0;
+        transform:scale(.7) rotate(-10deg);
+    }
+
+    to{
+        opacity:1;
+        transform:scale(1) rotate(0);
+    }
+}
+
+.ring{
+
+    position:absolute;
+
+    border-radius:50%;
+
+    border:1px solid rgba(0,229,255,.25);
+
+    animation:rotate 12s linear infinite;
+}
+
+.ring1{
+    width:95%;
+    height:95%;
+}
+
+.ring2{
+    width:73%;
+    height:73%;
+
+    border-color:rgba(124,58,237,.4);
+
+    animation-direction:reverse;
+
+    animation-duration:9s;
+}
+
+.ring3{
+    width:50%;
+    height:50%;
+
+    border-style:dashed;
+
+    animation-duration:6s;
+}
+
+@keyframes rotate{
+
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+
+/* ================= CONTROLLER ================= */
+
+.controller{
+
+    width:210px;
+    height:145px;
+
+    position:relative;
+
+    background:
+        linear-gradient(145deg,#172235,#080d18);
+
+    border:1px solid rgba(0,229,255,.45);
+
+    border-radius:45px 45px 60px 60px;
+
+    transform:rotate(-8deg);
+
+    box-shadow:
+        0 0 35px rgba(0,229,255,.18),
+        inset 0 0 30px rgba(0,229,255,.05);
+
+    animation:controllerFloat 3s ease-in-out infinite;
+}
+
+@keyframes controllerFloat{
+
+    50%{
+        transform:rotate(-4deg) translateY(-15px);
+    }
+}
+
+
+/* D-PAD */
+
+.dpad{
+    position:absolute;
+
+    left:32px;
+    top:48px;
+
+    width:45px;
+    height:45px;
+}
+
+.dpad::before,
+.dpad::after{
+
+    content:"";
+
+    position:absolute;
+
+    background:#00e5ff;
+
+    box-shadow:0 0 10px rgba(0,229,255,.5);
+
+    border-radius:3px;
+}
+
+.dpad::before{
+    width:15px;
+    height:45px;
+    left:15px;
+}
+
+.dpad::after{
+    width:45px;
+    height:15px;
+    top:15px;
+    left:0;
+}
+
+
+/* BUTTONS */
+
+.game-buttons{
+    position:absolute;
+
+    right:25px;
+    top:40px;
+
+    width:60px;
+    height:55px;
+}
+
+.game-buttons span{
+
+    position:absolute;
+
+    width:17px;
+    height:17px;
+
+    border-radius:50%;
+
+    background:#7c3aed;
+
+    box-shadow:0 0 12px rgba(124,58,237,.7);
+}
+
+.b1{
+    top:0;
+    left:20px;
+}
+
+.b2{
+    top:20px;
+    left:0;
+}
+
+.b3{
+    top:20px;
+    left:40px;
+}
+
+.b4{
+    top:40px;
+    left:20px;
+}
+
+
+/* CENTER */
+
+.center-light{
+
+    position:absolute;
+
+    left:50%;
+    top:42%;
+
+    width:35px;
+    height:8px;
+
+    transform:translateX(-50%);
+
+    border-radius:20px;
+
+    background:#00e5ff;
+
+    box-shadow:0 0 15px #00e5ff;
+
+    opacity:.7;
+}
+
+
+/* ================= STATS ================= */
+
+.stats{
+
+    display:flex;
+
+    gap:60px;
+
+    padding:25px 7%;
+
+    border-top:1px solid rgba(255,255,255,.06);
+
+    border-bottom:1px solid rgba(255,255,255,.06);
+
+    background:rgba(255,255,255,.015);
+}
+
+.stat h3{
+
+    font-family:Orbitron,sans-serif;
+
+    color:#00e5ff;
+
+    font-size:25px;
+}
+
+.stat p{
+
+    color:#657085;
+
+    font-size:11px;
+
+    margin-top:3px;
+
+    letter-spacing:1px;
+}
+
+
+/* ================= FEATURES ================= */
+
+.features{
+
+    padding:100px 7%;
+}
+
+.section-title{
+
+    text-align:center;
+
+    margin-bottom:50px;
+}
+
+.section-title small{
+
+    color:#00e5ff;
+
+    letter-spacing:3px;
+
+    font-size:10px;
+}
+
+.section-title h2{
+
+    font-family:Orbitron,sans-serif;
+
+    font-size:clamp(30px,5vw,50px);
+
+    margin-top:10px;
+}
+
+.cards{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:20px;
+}
+
+.card{
+
+    min-height:220px;
+
+    padding:30px;
+
+    border-radius:20px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    background:rgba(255,255,255,.025);
+
+    transition:.4s;
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+.card::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:120px;
+    height:120px;
+
+    border-radius:50%;
+
+    background:#00e5ff;
+
+    filter:blur(70px);
+
+    opacity:.08;
+
+    right:-50px;
+    bottom:-50px;
+}
+
+.card:hover{
+
+    transform:translateY(-10px);
+
+    border-color:rgba(0,229,255,.35);
+
+    box-shadow:0 20px 50px rgba(0,0,0,.35);
+}
+
+.card-icon{
+
+    font-size:35px;
+
+    margin-bottom:20px;
+}
+
+.card h3{
+
+    font-family:Orbitron,sans-serif;
+
+    font-size:17px;
+
+    margin-bottom:12px;
+}
+
+.card p{
+
+    color:#7d899f;
+
+    font-size:13px;
+
+    line-height:1.7;
+}
+
+
+/* ================= FOOTER ================= */
+
+footer{
+
+    text-align:center;
+
+    padding:30px 7%;
+
+    color:#586377;
+
+    border-top:1px solid rgba(255,255,255,.06);
+
+    font-size:11px;
+}
+
+footer span{
+    color:#00e5ff;
+}
+
+
+/* ================= MOBILE ================= */
+
+@media(max-width:850px){
+
+    .navbar{
+        padding:0 5%;
+    }
+
+    .nav-links{
+        gap:12px;
+    }
+
+    .nav-links a:not(.nav-play){
+        display:none;
+    }
+
+    .hero{
+
+        flex-direction:column;
+
+        text-align:center;
+
+        padding:120px 6% 70px;
+
+    }
+
+    .hero-content{
+
+        display:flex;
+
+        flex-direction:column;
+
+        align-items:center;
+    }
+
+    h1{
+
+        font-size:clamp(43px,14vw,70px);
+
+        letter-spacing:-2px;
+    }
+
+    .description{
+
+        font-size:14px;
+    }
+
+    .buttons{
+
+        justify-content:center;
+
+        width:100%;
+    }
+
+    .play-btn,
+    .explore-btn{
+
+        min-width:170px;
+    }
+
+    .visual{
+
+        width:min(330px,85vw);
+    }
+
+    .controller{
+
+        transform:scale(.85) rotate(-8deg);
+    }
+
+    .cards{
+
+        grid-template-columns:1fr;
+    }
+
+    .stats{
+
+        justify-content:center;
+
+        flex-wrap:wrap;
+
+        gap:30px;
+
+        text-align:center;
+    }
+
+    .features{
+
+        padding:75px 6%;
+    }
+}
+
+
+@media(max-width:450px){
+
+    .logo{
+        font-size:18px;
+    }
+
+    .nav-play{
+        padding:7px 15px;
+    }
+
+    h1{
+        font-size:42px;
+    }
+
+    .buttons{
+        flex-direction:column;
+    }
+
+    .play-btn,
+    .explore-btn{
+
+        width:100%;
+    }
+
+    .visual{
+        width:290px;
+    }
+
+}
+
 </style>
 </head>
 
+
 <body>
 
-<div class="container">
 
-  <div class="panda">
-    <div class="ear left"></div>
-    <div class="ear right"></div>
+<!-- BACKGROUND -->
 
-    <div class="face">
-      <div class="eye left"><span></span></div>
-      <div class="eye right"><span></span></div>
-      <div class="nose"></div>
-      <div class="mouth"></div>
-    </div>
-  </div>
+<div class="background">
 
-  <form id="loginForm">
-    <input type="text" placeholder="Username" required />
-    <input type="password" placeholder="Password" required />
-    <button type="submit">LOGIN</button>
-  </form>
+    <div class="grid"></div>
+
+    <div class="orb orb1"></div>
+
+    <div class="orb orb2"></div>
 
 </div>
 
-<script>
-document.getElementById("loginForm").addEventListener("submit", function(e){
-  e.preventDefault();
-  window.location.href = "game.html";
-});
-</script>
+
+<!-- PARTICLES -->
+
+<div class="particles">
+
+    <span class="particle" style="left:5%;animation-duration:9s;"></span>
+    <span class="particle" style="left:15%;animation-duration:12s;animation-delay:2s;"></span>
+    <span class="particle" style="left:27%;animation-duration:10s;animation-delay:4s;"></span>
+    <span class="particle" style="left:40%;animation-duration:14s;"></span>
+    <span class="particle" style="left:53%;animation-duration:11s;animation-delay:2s;"></span>
+    <span class="particle" style="left:66%;animation-duration:13s;"></span>
+    <span class="particle" style="left:78%;animation-duration:9s;animation-delay:3s;"></span>
+    <span class="particle" style="left:90%;animation-duration:12s;"></span>
+
+</div>
+
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        GAME<span>HUB</span>
+    </div>
+
+    <div class="nav-links">
+
+        <a href="#home">Home</a>
+
+        <a href="#features">Features</a>
+
+        <!-- GAME PAGE -->
+        <a href="game.html" class="nav-play">PLAY</a>
+
+    </div>
+
+</nav>
+
+
+<!-- HERO -->
+
+<main id="home">
+
+<section class="hero">
+
+
+    <div class="hero-content">
+
+
+        <div class="badge">
+
+            <span class="badge-dot"></span>
+
+            THE ULTIMATE GAMING ZONE
+
+        </div>
+
+
+        <h1>
+
+            ENTER<br>
+
+            THE <span class="cyan">GAME</span><br>
+
+            <span class="outline">WORLD.</span>
+
+        </h1>
+
+
+        <p class="description">
+
+            One hub. Endless adventures.
+            Challenge yourself, discover new games
+            and experience gaming like never before.
+
+        </p>
+
+
+        <div class="buttons">
+
+
+            <!-- MAIN PLAY BUTTON -->
+
+            <a href="game.html" class="play-btn">
+
+                PLAY NOW
+
+                <span class="arrow">→</span>
+
+            </a>
+
+
+            <a href="#features" class="explore-btn">
+
+                EXPLORE
+
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- GAMING VISUAL -->
+
+    <div class="visual">
+
+
+        <div class="ring ring1"></div>
+
+        <div class="ring ring2"></div>
+
+        <div class="ring ring3"></div>
+
+
+        <div class="controller">
+
+
+            <div class="dpad"></div>
+
+
+            <div class="game-buttons">
+
+                <span class="b1"></span>
+
+                <span class="b2"></span>
+
+                <span class="b3"></span>
+
+                <span class="b4"></span>
+
+            </div>
+
+
+            <div class="center-light"></div>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+<!-- STATS -->
+
+<section class="stats">
+
+
+    <div class="stat">
+
+        <h3>10+</h3>
+
+        <p>GAMES</p>
+
+    </div>
+
+
+    <div class="stat">
+
+        <h3>∞</h3>
+
+        <p>FUN</p>
+
+    </div>
+
+
+    <div class="stat">
+
+        <h3>24/7</h3>
+
+        <p>PLAY</p>
+
+    </div>
+
+
+</section>
+
+
+<!-- FEATURES -->
+
+<section class="features" id="features">
+
+
+    <div class="section-title">
+
+        <small>WHY GAMEHUB?</small>
+
+        <h2>BUILT TO PLAY</h2>
+
+    </div>
+
+
+    <div class="cards">
+
+
+        <div class="card">
+
+            <div class="card-icon">⚡</div>
+
+            <h3>FAST & SMOOTH</h3>
+
+            <p>
+                Lightweight and responsive interface
+                designed for a smooth gaming experience.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">🎯</div>
+
+            <h3>PLAY YOUR WAY</h3>
+
+            <p>
+                Choose your game, challenge yourself
+                and play whenever you want.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">🏆</div>
+
+            <h3>LEVEL UP</h3>
+
+            <p>
+                Improve your skills and become
+                the ultimate player.
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    © 2026 <span>GAMEHUB</span> — ENTER. PLAY. ENJOY.
+
+</footer>
+
 
 </body>
 </html>
