@@ -1,135 +1,1765 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GameVault - Epic Gaming Hub</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-  <style>
-    body { font-family: 'Segoe UI', sans-serif; }
-    .neon-text { text-shadow: 0 0 10px #22d3ee, 0 0 20px #22d3ee; }
-    .game-card { transition: all 0.3s ease; }
-    .game-card:hover { transform: scale(1.08); box-shadow: 0 0 25px rgba(34, 211, 238, 0.6); }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#030712">
+
+<title>GAMEHUB — Game Library</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* =====================================================
+   RESET
+===================================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    min-height:100vh;
+    overflow-x:hidden;
+    background:#030712;
+    color:#fff;
+    font-family:Poppins,sans-serif;
+}
+
+button,
+input{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+
+/* =====================================================
+   BACKGROUND
+===================================================== */
+
+.background{
+    position:fixed;
+    inset:0;
+    z-index:-20;
+    overflow:hidden;
+    background:
+        radial-gradient(
+            circle at 15% 15%,
+            rgba(0,229,255,.13),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 85% 75%,
+            rgba(124,58,237,.16),
+            transparent 30%
+        ),
+        #030712;
+}
+
+.grid{
+    position:absolute;
+    width:200%;
+    height:200%;
+    left:-50%;
+    top:-25%;
+
+    background-image:
+        linear-gradient(
+            rgba(0,229,255,.04) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(0,229,255,.04) 1px,
+            transparent 1px
+        );
+
+    background-size:55px 55px;
+
+    transform:
+        perspective(500px)
+        rotateX(60deg);
+
+    animation:gridMove 12s linear infinite;
+}
+
+@keyframes gridMove{
+
+    from{
+        transform:
+            perspective(500px)
+            rotateX(60deg)
+            translateY(0);
+    }
+
+    to{
+        transform:
+            perspective(500px)
+            rotateX(60deg)
+            translateY(55px);
+    }
+}
+
+.orb{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(100px);
+    opacity:.35;
+}
+
+.orb.one{
+    width:320px;
+    height:320px;
+    left:-150px;
+    top:20%;
+    background:#00e5ff;
+    animation:orbOne 9s ease-in-out infinite;
+}
+
+.orb.two{
+    width:360px;
+    height:360px;
+    right:-170px;
+    bottom:5%;
+    background:#7c3aed;
+    animation:orbTwo 10s ease-in-out infinite;
+}
+
+@keyframes orbOne{
+    50%{
+        transform:translate(90px,50px);
+    }
+}
+
+@keyframes orbTwo{
+    50%{
+        transform:translate(-80px,-50px);
+    }
+}
+
+
+/* =====================================================
+   PARTICLES
+===================================================== */
+
+.particles{
+    position:fixed;
+    inset:0;
+    z-index:-10;
+    pointer-events:none;
+}
+
+.particle{
+    position:absolute;
+    width:3px;
+    height:3px;
+    border-radius:50%;
+    background:#00e5ff;
+    box-shadow:0 0 12px #00e5ff;
+    animation:particleRise linear infinite;
+}
+
+@keyframes particleRise{
+
+    from{
+        transform:translateY(110vh);
+        opacity:0;
+    }
+
+    20%{
+        opacity:.8;
+    }
+
+    80%{
+        opacity:.8;
+    }
+
+    to{
+        transform:translateY(-10vh);
+        opacity:0;
+    }
+}
+
+
+/* =====================================================
+   NAVBAR
+===================================================== */
+
+.navbar{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:74px;
+    z-index:100;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 7%;
+
+    background:rgba(3,7,18,.68);
+    backdrop-filter:blur(18px);
+
+    border-bottom:1px solid rgba(255,255,255,.07);
+}
+
+.logo{
+    font-family:Orbitron,sans-serif;
+    font-size:22px;
+    font-weight:900;
+    letter-spacing:2px;
+}
+
+.logo span{
+    color:#00e5ff;
+    text-shadow:
+        0 0 10px #00e5ff,
+        0 0 30px rgba(0,229,255,.45);
+}
+
+.nav-right{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.nav-btn{
+    border:1px solid rgba(255,255,255,.1);
+    background:rgba(255,255,255,.035);
+    color:#a5afc0;
+    text-decoration:none;
+    padding:8px 15px;
+    border-radius:9px;
+    font-size:12px;
+    transition:.3s;
+}
+
+.nav-btn:hover{
+    color:#00e5ff;
+    border-color:rgba(0,229,255,.4);
+    background:rgba(0,229,255,.06);
+}
+
+.home-btn{
+    color:#00e5ff;
+    border-color:rgba(0,229,255,.35);
+}
+
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.main{
+    width:min(1400px,86%);
+    margin:auto;
+    padding-top:120px;
+    padding-bottom:70px;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.top-section{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:30px;
+    margin-bottom:32px;
+}
+
+.eyebrow{
+    color:#00e5ff;
+    font-size:10px;
+    letter-spacing:3px;
+}
+
+.title{
+    font-family:Orbitron,sans-serif;
+    font-size:clamp(36px,5vw,62px);
+    line-height:1.05;
+    margin-top:8px;
+}
+
+.title span{
+    color:#00e5ff;
+    text-shadow:0 0 25px rgba(0,229,255,.25);
+}
+
+.subtitle{
+    color:#7d899d;
+    font-size:13px;
+    margin-top:12px;
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+.search-box{
+    position:relative;
+    width:300px;
+    flex-shrink:0;
+}
+
+.search-box input{
+    width:100%;
+    height:48px;
+
+    padding:0 45px 0 17px;
+
+    color:#fff;
+    outline:none;
+
+    border-radius:12px;
+
+    border:1px solid rgba(255,255,255,.1);
+
+    background:rgba(255,255,255,.045);
+
+    transition:.3s;
+}
+
+.search-box input::placeholder{
+    color:#697489;
+}
+
+.search-box input:focus{
+    border-color:rgba(0,229,255,.5);
+    box-shadow:0 0 25px rgba(0,229,255,.08);
+}
+
+.search-icon{
+    position:absolute;
+    right:15px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#718097;
+}
+
+
+/* =====================================================
+   CATEGORIES
+===================================================== */
+
+.categories{
+    display:flex;
+    flex-wrap:wrap;
+    gap:9px;
+    margin-bottom:30px;
+}
+
+.category{
+    border:1px solid rgba(255,255,255,.09);
+    background:rgba(255,255,255,.035);
+    color:#8e99ac;
+
+    padding:9px 17px;
+
+    border-radius:30px;
+
+    font-size:11px;
+
+    transition:.3s;
+}
+
+.category:hover{
+    color:#00e5ff;
+    border-color:rgba(0,229,255,.35);
+}
+
+.category.active{
+    color:#02040a;
+    background:#00e5ff;
+    border-color:#00e5ff;
+    box-shadow:0 0 20px rgba(0,229,255,.25);
+}
+
+
+/* =====================================================
+   FEATURED
+===================================================== */
+
+.featured{
+    position:relative;
+    min-height:285px;
+
+    margin-bottom:45px;
+
+    padding:38px;
+
+    overflow:hidden;
+
+    border-radius:25px;
+
+    border:1px solid rgba(0,229,255,.15);
+
+    background:
+        linear-gradient(
+            100deg,
+            rgba(0,229,255,.08),
+            rgba(124,58,237,.07)
+        ),
+        rgba(255,255,255,.025);
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.2);
+}
+
+.featured::after{
+    content:"";
+    position:absolute;
+
+    width:350px;
+    height:350px;
+
+    right:-100px;
+    top:-160px;
+
+    border-radius:50%;
+
+    background:#00e5ff;
+
+    filter:blur(110px);
+
+    opacity:.1;
+}
+
+.featured-content{
+    position:relative;
+    z-index:3;
+    max-width:620px;
+}
+
+.featured-label{
+    display:inline-block;
+
+    padding:6px 12px;
+
+    border-radius:20px;
+
+    color:#00e5ff;
+
+    background:rgba(0,229,255,.07);
+
+    border:1px solid rgba(0,229,255,.2);
+
+    font-size:9px;
+
+    letter-spacing:2px;
+
+    margin-bottom:15px;
+}
+
+.featured h2{
+    font-family:Orbitron,sans-serif;
+    font-size:clamp(27px,4vw,46px);
+    margin-bottom:10px;
+}
+
+.featured h2 span{
+    color:#00e5ff;
+}
+
+.featured p{
+    max-width:540px;
+
+    color:#8995a9;
+
+    font-size:13px;
+
+    line-height:1.75;
+
+    margin-bottom:22px;
+}
+
+.featured-play{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+
+    padding:12px 21px;
+
+    border-radius:10px;
+
+    color:#02040a;
+
+    background:#00e5ff;
+
+    text-decoration:none;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    transition:.3s;
+
+    box-shadow:0 0 20px rgba(0,229,255,.2);
+}
+
+.featured-play:hover{
+    transform:translateY(-4px);
+    box-shadow:0 0 35px rgba(0,229,255,.45);
+}
+
+.featured-icon{
+    position:absolute;
+    right:10%;
+    top:50%;
+    transform:translateY(-50%);
+
+    font-size:155px;
+
+    filter:
+        drop-shadow(0 0 25px rgba(0,229,255,.25));
+
+    animation:featuredFloat 3s ease-in-out infinite;
+}
+
+@keyframes featuredFloat{
+    50%{
+        transform:
+            translateY(calc(-50% - 15px))
+            rotate(4deg);
+    }
+}
+
+
+/* =====================================================
+   GAME HEADER
+===================================================== */
+
+.game-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:20px;
+}
+
+.game-header h2{
+    font-family:Orbitron,sans-serif;
+    font-size:21px;
+}
+
+.game-count{
+    color:#69758a;
+    font-size:11px;
+}
+
+
+/* =====================================================
+   GAME GRID
+===================================================== */
+
+.game-grid{
+    display:grid;
+    grid-template-columns:
+        repeat(4,minmax(0,1fr));
+    gap:18px;
+}
+
+
+/* =====================================================
+   GAME CARD
+===================================================== */
+
+.game-card{
+    position:relative;
+
+    overflow:hidden;
+
+    min-width:0;
+
+    border-radius:18px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    background:rgba(255,255,255,.025);
+
+    transition:
+        transform .35s,
+        border-color .35s,
+        box-shadow .35s;
+
+    animation:cardAppear .55s ease both;
+}
+
+.game-card:hover{
+    transform:translateY(-9px);
+
+    border-color:rgba(0,229,255,.38);
+
+    box-shadow:
+        0 22px 50px rgba(0,0,0,.35),
+        0 0 30px rgba(0,229,255,.05);
+}
+
+@keyframes cardAppear{
+    from{
+        opacity:0;
+        transform:translateY(15px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+
+/* =====================================================
+   GAME IMAGE
+===================================================== */
+
+.game-image{
+    height:165px;
+
+    position:relative;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:72px;
+
+    border-bottom:1px solid rgba(255,255,255,.06);
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0,229,255,.13),
+            transparent 58%
+        ),
+        #08101e;
+
+    transition:.4s;
+}
+
+.game-card:hover .game-image{
+    transform:scale(1.03);
+}
+
+.game-card:nth-child(2) .game-image{
+    background:
+        radial-gradient(
+            circle,
+            rgba(124,58,237,.2),
+            transparent 58%
+        ),
+        #0b0818;
+}
+
+.game-card:nth-child(3) .game-image{
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,65,65,.14),
+            transparent 58%
+        ),
+        #13090c;
+}
+
+.game-card:nth-child(4) .game-image{
+    background:
+        radial-gradient(
+            circle,
+            rgba(0,255,170,.13),
+            transparent 58%
+        ),
+        #06130f;
+}
+
+.game-card:nth-child(5) .game-image{
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,190,0,.15),
+            transparent 58%
+        ),
+        #141005;
+}
+
+.game-card:nth-child(6) .game-image{
+    background:
+        radial-gradient(
+            circle,
+            rgba(0,130,255,.17),
+            transparent 58%
+        ),
+        #06101a;
+}
+
+.game-card:nth-child(7) .game-image{
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,0,170,.13),
+            transparent 58%
+        ),
+        #120611;
+}
+
+.game-card:nth-child(8) .game-image{
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,255,255,.08),
+            transparent 58%
+        ),
+        #0d0d0d;
+}
+
+
+/* =====================================================
+   CARD BADGE
+===================================================== */
+
+.card-badge{
+    position:absolute;
+    left:12px;
+    top:12px;
+
+    z-index:5;
+
+    padding:5px 9px;
+
+    border-radius:20px;
+
+    color:#dffbff;
+
+    background:rgba(0,0,0,.45);
+
+    border:1px solid rgba(255,255,255,.1);
+
+    backdrop-filter:blur(8px);
+
+    font-size:8px;
+
+    letter-spacing:1px;
+}
+
+
+/* =====================================================
+   CARD INFO
+===================================================== */
+
+.game-info{
+    padding:16px;
+}
+
+.game-info h3{
+    font-family:Orbitron,sans-serif;
+    font-size:13px;
+    margin-bottom:5px;
+}
+
+.game-info p{
+    color:#6d798d;
+    font-size:10px;
+    margin-bottom:14px;
+}
+
+.game-bottom{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.play-game{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:7px 15px;
+
+    border-radius:8px;
+
+    text-decoration:none;
+
+    color:#00e5ff;
+
+    background:rgba(0,229,255,.04);
+
+    border:1px solid rgba(0,229,255,.25);
+
+    font-size:10px;
+
+    font-weight:600;
+
+    transition:.3s;
+}
+
+.play-game:hover{
+    color:#02040a;
+    background:#00e5ff;
+    box-shadow:0 0 18px rgba(0,229,255,.35);
+}
+
+.rating{
+    color:#6f7b90;
+    font-size:10px;
+}
+
+
+/* =====================================================
+   NO RESULTS
+===================================================== */
+
+.no-results{
+    display:none;
+
+    text-align:center;
+
+    padding:70px 20px;
+
+    border:1px dashed rgba(255,255,255,.1);
+
+    border-radius:18px;
+
+    color:#718096;
+}
+
+.no-results.show{
+    display:block;
+}
+
+.no-results .icon{
+    font-size:40px;
+    margin-bottom:10px;
+}
+
+.no-results h3{
+    color:#b7c0cf;
+    margin-bottom:5px;
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+footer{
+    text-align:center;
+
+    padding:30px 7%;
+
+    color:#566174;
+
+    border-top:1px solid rgba(255,255,255,.06);
+
+    font-size:10px;
+}
+
+footer span{
+    color:#00e5ff;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:1050px){
+
+    .game-grid{
+        grid-template-columns:
+            repeat(3,minmax(0,1fr));
+    }
+
+    .featured-icon{
+        right:4%;
+        opacity:.55;
+    }
+}
+
+@media(max-width:800px){
+
+    .navbar{
+        padding:0 5%;
+    }
+
+    .main{
+        width:90%;
+    }
+
+    .top-section{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .search-box{
+        width:100%;
+    }
+
+    .featured{
+        padding:28px;
+        min-height:300px;
+    }
+
+    .featured-icon{
+        right:-20px;
+        bottom:-20px;
+        top:auto;
+        transform:none;
+        font-size:110px;
+        opacity:.22;
+    }
+
+    .game-grid{
+        grid-template-columns:
+            repeat(2,minmax(0,1fr));
+    }
+}
+
+@media(max-width:520px){
+
+    .navbar{
+        height:68px;
+    }
+
+    .logo{
+        font-size:18px;
+    }
+
+    .nav-btn{
+        padding:7px 11px;
+        font-size:10px;
+    }
+
+    .main{
+        width:92%;
+        padding-top:105px;
+    }
+
+    .title{
+        font-size:36px;
+    }
+
+    .game-grid{
+        grid-template-columns:1fr;
+    }
+
+    .game-image{
+        height:190px;
+    }
+
+    .categories{
+        overflow-x:auto;
+        flex-wrap:nowrap;
+        padding-bottom:5px;
+    }
+
+    .category{
+        flex-shrink:0;
+    }
+
+    .featured h2{
+        font-size:28px;
+    }
+}
+
+</style>
 </head>
-<body class="bg-zinc-950 text-white">
 
-  <!-- Navbar -->
-  <nav class="bg-black border-b border-cyan-500 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <i class="fas fa-gamepad text-4xl text-cyan-400"></i>
-        <h1 class="text-3xl font-bold neon-text">GAMEVAULT</h1>
-      </div>
-      <div class="flex gap-8 text-lg">
-        <a href="#" class="hover:text-cyan-400 transition">Home</a>
-        <a href="#games" class="hover:text-cyan-400 transition">Games</a>
-        <a href="#" class="hover:text-cyan-400 transition">Categories</a>
-        <a href="#" class="hover:text-cyan-400 transition">Community</a>
-      </div>
-      <div class="flex items-center gap-4">
-        <input type="text" placeholder="Search games..." 
-               class="bg-zinc-900 border border-cyan-500 rounded-full px-5 py-2 w-80 focus:outline-none focus:border-cyan-300">
-        <button class="bg-cyan-500 hover:bg-cyan-600 px-6 py-2 rounded-full font-semibold">Login</button>
-      </div>
+<body>
+
+
+<!-- =====================================================
+     BACKGROUND
+===================================================== -->
+
+<div class="background">
+
+    <div class="grid"></div>
+
+    <div class="orb one"></div>
+
+    <div class="orb two"></div>
+
+</div>
+
+
+<!-- =====================================================
+     PARTICLES
+===================================================== -->
+
+<div class="particles">
+
+    <span class="particle" style="left:4%;animation-duration:9s;"></span>
+    <span class="particle" style="left:12%;animation-duration:12s;animation-delay:2s;"></span>
+    <span class="particle" style="left:23%;animation-duration:10s;animation-delay:4s;"></span>
+    <span class="particle" style="left:35%;animation-duration:14s;"></span>
+    <span class="particle" style="left:48%;animation-duration:11s;animation-delay:3s;"></span>
+    <span class="particle" style="left:61%;animation-duration:13s;"></span>
+    <span class="particle" style="left:74%;animation-duration:9s;animation-delay:2s;"></span>
+    <span class="particle" style="left:87%;animation-duration:12s;"></span>
+    <span class="particle" style="left:96%;animation-duration:10s;animation-delay:4s;"></span>
+
+</div>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        GAME<span>HUB</span>
     </div>
-  </nav>
 
-  <!-- Hero Section -->
-  <div class="relative h-screen bg-cover bg-center flex items-center" 
-       style="background-image: url('https://images.unsplash.com/photo-1616588587689-4e5b0c5e5b5b')">
-    <div class="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent"></div>
-    <div class="max-w-4xl mx-auto px-6 relative z-10">
-      <h2 class="text-6xl font-bold mb-4 neon-text">WELCOME TO THE ARENA</h2>
-      <p class="text-2xl mb-8 text-cyan-300">Play. Compete. Dominate.</p>
-      <button onclick="document.getElementById('games').scrollIntoView({behavior: 'smooth'})"
-              class="bg-white text-black px-10 py-4 rounded-full text-xl font-bold hover:bg-cyan-400 transition">
-        EXPLORE GAMES →
-      </button>
-    </div>
-  </div>
+    <div class="nav-right">
 
-  <!-- Games Section -->
-  <section id="games" class="max-w-7xl mx-auto px-6 py-16">
-    <h2 class="text-5xl font-bold text-center mb-12 neon-text">🎮 YOUR GAME LIBRARY</h2>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-      
-      <!-- Game Card 1 -->
-      <div class="game-card bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-700">
-        <div class="h-52 bg-gradient-to-br from-purple-600 to-cyan-500 flex items-center justify-center">
-          <span class="text-6xl">🎮</span>
-        </div>
-        <div class="p-5">
-          <h3 class="text-2xl font-semibold mb-1">Game Name 1</h3>
-          <p class="text-zinc-400 text-sm mb-4">Action • Adventure</p>
-          <a href="YOUR_GAME_LINK_HERE" target="_blank"
-             class="block bg-cyan-500 hover:bg-cyan-600 text-center py-3 rounded-xl font-bold text-lg">
-            ▶️ PLAY NOW
-          </a>
-        </div>
-      </div>
+        <a href="index.html" class="nav-btn home-btn">
+            ← HOME
+        </a>
 
-      <!-- Game Card 2 -->
-      <div class="game-card bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-700">
-        <div class="h-52 bg-gradient-to-br from-red-600 to-orange-500 flex items-center justify-center">
-          <span class="text-6xl">🏎️</span>
-        </div>
-        <div class="p-5">
-          <h3 class="text-2xl font-semibold mb-1">Game Name 2</h3>
-          <p class="text-zinc-400 text-sm mb-4">Racing • Multiplayer</p>
-          <a href="YOUR_GAME_LINK_HERE" target="_blank"
-             class="block bg-cyan-500 hover:bg-cyan-600 text-center py-3 rounded-xl font-bold text-lg">
-            ▶️ PLAY NOW
-          </a>
-        </div>
-      </div>
-
-      <!-- Game Card 3 -->
-      <div class="game-card bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-700">
-        <div class="h-52 bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
-          <span class="text-6xl">⚔️</span>
-        </div>
-        <div class="p-5">
-          <h3 class="text-2xl font-semibold mb-1">Game Name 3</h3>
-          <p class="text-zinc-400 text-sm mb-4">Battle Royale</p>
-          <a href="YOUR_GAME_LINK_HERE" target="_blank"
-             class="block bg-cyan-500 hover:bg-cyan-600 text-center py-3 rounded-xl font-bold text-lg">
-            ▶️ PLAY NOW
-          </a>
-        </div>
-      </div>
-
-      <!-- Game Card 4 -->
-      <div class="game-card bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-700">
-        <div class="h-52 bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center">
-          <span class="text-6xl">🧠</span>
-        </div>
-        <div class="p-5">
-          <h3 class="text-2xl font-semibold mb-1">Game Name 4</h3>
-          <p class="text-zinc-400 text-sm mb-4">Puzzle • Strategy</p>
-          <a href="YOUR_GAME_LINK_HERE" target="_blank"
-             class="block bg-cyan-500 hover:bg-cyan-600 text-center py-3 rounded-xl font-bold text-lg">
-            ▶️ PLAY NOW
-          </a>
-        </div>
-      </div>
+        <a href="#games" class="nav-btn">
+            GAMES
+        </a>
 
     </div>
-  </section>
 
-  <!-- Add More Games Button -->
-  <div class="text-center mb-16">
-    <button onclick="alert('Add more game cards by copying the template!')" 
-            class="bg-zinc-800 hover:bg-zinc-700 px-8 py-4 rounded-full text-lg font-semibold border border-cyan-500">
-      + Add More Games
-    </button>
-  </div>
+</nav>
 
-  <footer class="bg-black py-12 border-t border-zinc-800 text-center">
-    <p class="text-zinc-500">Made with 🔥 for the real gamers</p>
-  </footer>
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+
+    <!-- HEADER -->
+
+    <section class="top-section">
+
+        <div>
+
+            <div class="eyebrow">
+                GAME LIBRARY
+            </div>
+
+            <h1 class="title">
+                CHOOSE YOUR <span>GAME</span>
+            </h1>
+
+            <p class="subtitle">
+                Pick a game. Hit play. Enter the world.
+            </p>
+
+        </div>
+
+
+        <!-- SEARCH -->
+
+        <div class="search-box">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search games..."
+                autocomplete="off"
+            >
+
+            <span class="search-icon">
+                🔍
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- CATEGORIES -->
+
+    <div class="categories">
+
+        <button
+            class="category active"
+            data-category="all">
+            ALL
+        </button>
+
+        <button
+            class="category"
+            data-category="arcade">
+            ARCADE
+        </button>
+
+        <button
+            class="category"
+            data-category="board">
+            BOARD
+        </button>
+
+        <button
+            class="category"
+            data-category="racing">
+            RACING
+        </button>
+
+        <button
+            class="category"
+            data-category="casual">
+            CASUAL
+        </button>
+
+        <button
+            class="category"
+            data-category="action">
+            ACTION
+        </button>
+
+    </div>
+
+
+    <!-- =================================================
+         FEATURED GAME
+    ================================================= -->
+
+    <section class="featured">
+
+        <div class="featured-content">
+
+            <div class="featured-label">
+                ⭐ FEATURED
+            </div>
+
+            <h2>
+                CHESS <span>ARENA</span>
+            </h2>
+
+            <p>
+                Think ahead, control the board and
+                outsmart your opponent. A strategic
+                battle where every move matters.
+            </p>
+
+            <!--
+                IMPORTANT:
+                Jab chess.html banaye,
+                href="#" ko "chess.html" karna.
+            -->
+
+            <a
+                href="#"
+                class="featured-play"
+                onclick="gameNotReady(event,'Chess')">
+
+                PLAY CHESS
+                <span>→</span>
+
+            </a>
+
+        </div>
+
+        <div class="featured-icon">
+            ♟
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         GAME SECTION HEADER
+    ================================================= -->
+
+    <div class="game-header" id="games">
+
+        <h2>
+            ALL GAMES
+        </h2>
+
+        <span
+            class="game-count"
+            id="gameCount">
+            8 GAMES
+        </span>
+
+    </div>
+
+
+    <!-- =================================================
+         GAME GRID
+    ================================================= -->
+
+    <section class="game-grid" id="gameGrid">
+
+
+        <!-- CHESS -->
+
+        <article
+            class="game-card"
+            data-name="chess"
+            data-category="board">
+
+            <div class="card-badge">
+                FEATURED
+            </div>
+
+            <div class="game-image">
+                ♟️
+            </div>
+
+            <div class="game-info">
+
+                <h3>CHESS</h3>
+
+                <p>
+                    Strategy • Board
+                </p>
+
+                <div class="game-bottom">
+
+                    <a
+                        href="#"
+                        class="play-game"
+                        onclick="gameNotReady(event,'Chess')">
+                        PLAY
+                    </a>
+
+                    <span class="rating">
+                        ★ 4.9
+                    </span>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- SNAKE -->
+
+        <article
+            class="game-card"
+            data-name="snake"
+            data-category="arcade">
+
+            <div class="game-image">
+                🐍
+            </div>
+
+            <div class="game-info">
+
+                <h3>SNAKE</h3>
+
+                <p>
+                    Arcade • Classic
+                </p>
+
+                <div class="game-bottom">
+
+                    <a
+                        href="#"
+                        class="play-game"
+                        onclick="gameNotReady(event,'Snake')">
+                        PLAY
+                    </a>
+
+                    <span class="rating">
+                        ★ 4.7
+                    </span>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- RACING -->
+
+        <article
+            class="game-card"
+            data-name="street racer racing car"
+            data-category="racing">
+
+            <div class="game-image">
+                🏎️
+            </div>
+
+            <div class="game-info">
+
+                <h3>STREET RACER</h3>
+
+                <p>
+                    Racing • Speed
+                </p>
+
+                <div class="game-bottom">
+
+                    <a
+                        href="#"
+                        class="play-game"
+                        onclick="gameNotReady(event,'Street Racer')">
+                        PLAY
+                    </a>
+
+                    <span class="rating">
+                        ★ 4.8
+                    </span>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- CARROM -->
+
+        <article
+            class="game-card"
+            data-name="carrom"
+            data-category="board casual">
+
+            <div class="game-image">
+                🪙
+            </div>
+
+            <div class="game-info">
+
+                <h3>CARROM</h3>
+
+                <p>
+                    Casual • Board
+                </p>
+
+                <div class="game-bottom">
+
+                    <a
+                        href="#"
+                        class="play-game"
+                        onclick="gameNotReady(event,'Carrom')">
+                        PLAY
+                    </a>
+
+                    <span class="rating">
+                        ★ 4.6
+                    </span>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- LUDO -->
+
+        <article
+            class="game-card"
+            data-name="ludo"
+            data-category="board casual">
+
+            <div class="game-image">
+                🎲
+            </div>
+
+            <div class="game-info">
+
+                <h3>LUDO</h3>
+
+                <p>
+                    Casual • Board
+                </p>
+
+                <div class="game-bottom">
+
+                    <a
+                        href="#"
+                        class="play-game"
+                        onclick="gameNotReady(event,'Ludo')">
+                        PLAY
+                    </a>
+
+                    <span class="rating">
+                        ★ 4.8
+                    </span>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- BIKE -->
+
+        <article
+            class="game-card"
+            data-name="bike rush motorcycle"
+            data-category="racing action">
+
+            <div class="game-image">
+                🏍️
+            </div>
+
+            <div class="game-info">
+
+                <h3>BIKE RUSH</h3>
+
+                <p>
+                    Racing • Action
+                </p>
+
+                <div class="game-bottom">
+
+                    <a
+                        href="#"
+                        class="play-game"
+                        onclick="gameNotReady(event,'Bike Rush')">
+                        PLAY
+                    </a>
+
+                    <span class="rating">
+                        ★ 4.7
+                    </span>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- SPACE -->
+
+        <article
+            class="game-card"
+            data-name="space run rocket"
+            data-category="arcade action">
+
+            <div class="game-image">
+                🚀
+            </div>
+
+            <div class="game-info">
+
+                <h3>SPACE RUN</h3>
+
+                <p>
+                    Arcade • Action
+                </p>
+
+                <div class="game-bottom">
+
+                    <a
+                        href="#"
+                        class="play-game"
+                        onclick="gameNotReady(event,'Space Run')">
+                        PLAY
+                    </a>
+
+                    <span class="rating">
+                        ★ 4.5
+                    </span>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- TARGET -->
+
+        <article
+            class="game-card"
+            data-name="target zone shooting target"
+            data-category="arcade action">
+
+            <div class="game-image">
+                🎯
+            </div>
+
+            <div class="game-info">
+
+                <h3>TARGET ZONE</h3>
+
+                <p>
+                    Arcade • Skill
+                </p>
+
+                <div class="game-bottom">
+
+                    <a
+                        href="#"
+                        class="play-game"
+                        onclick="gameNotReady(event,'Target Zone')">
+                        PLAY
+                    </a>
+
+                    <span class="rating">
+                        ★ 4.6
+                    </span>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+    </section>
+
+
+    <!-- NO SEARCH RESULT -->
+
+    <div
+        class="no-results"
+        id="noResults">
+
+        <div class="icon">
+            🔎
+        </div>
+
+        <h3>
+            NO GAMES FOUND
+        </h3>
+
+        <p>
+            Try another game name or category.
+        </p>
+
+    </div>
+
+
+</main>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    © 2026 <span>GAMEHUB</span>
+    — ENTER. PLAY. MASTER.
+
+</footer>
+
+
+<script>
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+const searchInput =
+    document.getElementById("searchInput");
+
+const cards =
+    Array.from(document.querySelectorAll(".game-card"));
+
+const categories =
+    Array.from(document.querySelectorAll(".category"));
+
+const gameCount =
+    document.getElementById("gameCount");
+
+const noResults =
+    document.getElementById("noResults");
+
+let activeCategory = "all";
+
+
+/* =====================================================
+   FILTER FUNCTION
+===================================================== */
+
+function filterGames(){
+
+    const search =
+        searchInput.value
+        .toLowerCase()
+        .trim();
+
+    let visible = 0;
+
+
+    cards.forEach(card => {
+
+        const name =
+            card.dataset.name.toLowerCase();
+
+        const category =
+            card.dataset.category.toLowerCase();
+
+
+        const matchesSearch =
+            name.includes(search);
+
+
+        const matchesCategory =
+            activeCategory === "all" ||
+            category.includes(activeCategory);
+
+
+        if(matchesSearch && matchesCategory){
+
+            card.style.display = "";
+
+            visible++;
+
+        }else{
+
+            card.style.display = "none";
+
+        }
+
+    });
+
+
+    gameCount.textContent =
+        visible +
+        (visible === 1 ? " GAME" : " GAMES");
+
+
+    if(visible === 0){
+
+        noResults.classList.add("show");
+
+    }else{
+
+        noResults.classList.remove("show");
+
+    }
+
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+searchInput.addEventListener(
+    "input",
+    filterGames
+);
+
+
+/* =====================================================
+   CATEGORY BUTTONS
+===================================================== */
+
+categories.forEach(category => {
+
+    category.addEventListener(
+        "click",
+        () => {
+
+            categories.forEach(item => {
+
+                item.classList.remove("active");
+
+            });
+
+
+            category.classList.add("active");
+
+
+            activeCategory =
+                category.dataset.category;
+
+
+            filterGames();
+
+        }
+    );
+
+});
+
+
+/* =====================================================
+   GAME NOT READY MESSAGE
+===================================================== */
+
+function gameNotReady(event,gameName){
+
+    event.preventDefault();
+
+    alert(
+        gameName +
+        " is coming soon!\n\n" +
+        "Its game page will be connected here."
+    );
+
+}
+
+
+/* =====================================================
+   ESCAPE KEY = SEARCH
+===================================================== */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if(
+            event.key === "/" &&
+            document.activeElement !== searchInput
+        ){
+
+            event.preventDefault();
+
+            searchInput.focus();
+
+        }
+
+        if(event.key === "Escape"){
+
+            searchInput.value = "";
+
+            activeCategory = "all";
+
+
+            categories.forEach(item => {
+
+                item.classList.remove("active");
+
+            });
+
+
+            categories[0].classList.add("active");
+
+
+            filterGames();
+
+            searchInput.blur();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
+
+filterGames();
+
+</script>
 
 </body>
 </html>
